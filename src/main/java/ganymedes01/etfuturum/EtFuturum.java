@@ -167,6 +167,7 @@ public class EtFuturum {
 
 		ADConfig config = new ADConfig();
 
+		getAssets(config);
 		getSounds(config);
 
 		AssetDirectorAPI.register(config);
@@ -591,6 +592,11 @@ public class EtFuturum {
 		return null;
 	}
 
+	private static void getAssets(ADConfig config) {
+		String ver = "1.13.2";
+		config.addJar(ver);
+	}
+
 	private static void getSounds(ADConfig config) {
 		String ver = Tags.MC_ASSET_VER.split("_")[1];
 		config.addObject(ver, "minecraft/sounds/ambient/cave/cave14.ogg");
@@ -644,6 +650,15 @@ public class EtFuturum {
 		config.addSoundEvent(ver, "entity.zombie_villager.step", "hostile");
 		config.addSoundEvent(ver, "entity.zombie_villager.hurt", "hostile");
 		config.addSoundEvent(ver, "entity.zombie_villager.death", "hostile");
+		config.addSoundEvent(ver, "entity.drowned.ambient", "hostile");
+		config.addSoundEvent(ver, "entity.drowned.ambient_water", "hostile");
+		config.addSoundEvent(ver, "entity.drowned.hurt", "hostile");
+		config.addSoundEvent(ver, "entity.drowned.hurt_water", "hostile");
+		config.addSoundEvent(ver, "entity.drowned.death", "hostile");
+		config.addSoundEvent(ver, "entity.drowned.death_water", "hostile");
+		config.addSoundEvent(ver, "entity.drowned.shoot", "hostile");
+		config.addSoundEvent(ver, "entity.drowned.step", "hostile");
+		config.addSoundEvent(ver, "entity.drowned.swim", "hostile");
 		config.addSoundEvent(ver, "entity.husk.ambient", "hostile");
 		config.addSoundEvent(ver, "entity.husk.step", "hostile");
 		config.addSoundEvent(ver, "entity.husk.hurt", "hostile");
@@ -770,6 +785,14 @@ public class EtFuturum {
 		config.addSoundEvent(ver, "item.bottle.empty", "player");
 		config.addSoundEvent(ver, "item.bone_meal.use", "player");
 		config.addSoundEvent(ver, "item.honey_bottle.drink", "player");
+		config.addSoundEvent(ver, "item.trident.throw", "player");
+		config.addSoundEvent(ver, "item.trident.hit", "player");
+		config.addSoundEvent(ver, "item.trident.hit_ground", "player");
+		config.addSoundEvent(ver, "item.trident.return", "player");
+		config.addSoundEvent(ver, "item.trident.thunder", "player");
+		config.addSoundEvent(ver, "item.trident.riptide_1", "player");
+		config.addSoundEvent(ver, "item.trident.riptide_2", "player");
+		config.addSoundEvent(ver, "item.trident.riptide_3", "player");
 
 		config.addSoundEvent(ver, "item.armor.equip_leather", "player");
 		config.addSoundEvent(ver, "item.armor.equip_gold", "player");

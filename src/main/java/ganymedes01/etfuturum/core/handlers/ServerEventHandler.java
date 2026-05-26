@@ -1652,6 +1652,8 @@ public class ServerEventHandler {
 			event.ammount *= ((float) ConfigFunctions.hayBaleReducePercent / (float) 100);
 		}
 
+		ModEnchantments.onLivingHurt(event);
+
 		// --- Attack a living entity --- //
 		if (ConfigSounds.combatSounds && event.source.damageType.equals("player")) {
 			EntityPlayer playerSource = (EntityPlayer) event.source.getEntity();

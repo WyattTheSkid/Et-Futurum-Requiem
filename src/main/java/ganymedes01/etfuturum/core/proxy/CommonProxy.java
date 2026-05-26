@@ -138,6 +138,15 @@ public class CommonProxy implements IGuiHandler {
 			ModEntityList.registerEntity(EntitySpectralArrow.class, "spectral_arrow", 25, EtFuturum.instance, 64, 20, true);
 		}
 
+		if (ModItems.TRIDENT.isEnabled()) {
+			ModEntityList.registerEntity(EntityTrident.class, "trident", 26, EtFuturum.instance, 64, 20, true);
+		}
+
+		if (ConfigEntities.enableDrowned) {
+			ModEntityList.registerEntity(EntityDrowned.class, "drowned", 27, EtFuturum.instance, 80, 3, true, 0x8FF1D7, 0x799C65);
+			EntityRegistry.addSpawn(EntityDrowned.class, 1, 1, 1, EnumCreatureType.waterCreature, BiomeDictionary.getBiomesForType(Type.WATER));
+		}
+
 		if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLClientHandler.instance().hasOptifine()) {
 			if (!ConfigWorld.oldHuskSpawning) {
 				Logger.warn("OptiFine detected, old husk spawn logic will be enabled since OptiFine is stupid and breaks the default behavior.");

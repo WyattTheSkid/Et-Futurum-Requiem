@@ -82,6 +82,9 @@ public class ClientProxy extends CommonProxy {
 		if (ModItems.GOAT_HORN.isEnabled()) {
 			MinecraftForgeClient.registerItemRenderer(ModItems.GOAT_HORN.get(), new ItemGoatHornRenderer());
 		}
+		if (ModItems.TRIDENT.isEnabled()) {
+			MinecraftForgeClient.registerItemRenderer(ModItems.TRIDENT.get(), new ItemTridentRenderer());
+		}
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.SHULKER_BOX.get()), new ItemShulkerBoxRenderer());
 		if (ConfigFunctions.inventoryBedModels) {
 			MinecraftForgeClient.registerItemRenderer(Items.bed, new Item3DBedRenderer((BlockBed) Blocks.bed));
@@ -172,6 +175,8 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityPolarBear.class, new PolarBearRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntityGoat.class, new GoatRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntitySpectralArrow.class, new SpectralArrowRenderer());
+		RenderingRegistry.registerEntityRenderingHandler(EntityTrident.class, new TridentRenderer());
+		RenderingRegistry.registerEntityRenderingHandler(EntityDrowned.class, new DrownedRenderer());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityPig.class, new TechnobladeCrownRenderer());
 

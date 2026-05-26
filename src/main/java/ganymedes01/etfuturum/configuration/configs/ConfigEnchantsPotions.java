@@ -9,9 +9,17 @@ public class ConfigEnchantsPotions extends ConfigBase {
 	public static boolean enableFrostWalker;
 	public static boolean enableMending;
 	public static boolean enableSwiftSneak;
+	public static boolean enableLoyalty;
+	public static boolean enableImpaling;
+	public static boolean enableRiptide;
+	public static boolean enableChanneling;
 	public static int mendingID;
 	public static int frostWalkerID;
 	public static int swiftSneakID;
+	public static int loyaltyID;
+	public static int impalingID;
+	public static int riptideID;
+	public static int channelingID;
 	public static int levitationID;
 	public static int glowingID;
 
@@ -37,6 +45,14 @@ public class ConfigEnchantsPotions extends ConfigBase {
 		mendingID = getInt("mendingID", catEnchants, 201, 0, Short.MAX_VALUE, "");
 		enableSwiftSneak = getBoolean("swiftSneak", catEnchants, true, "");
 		swiftSneakID = getInt("swiftSneakID", catEnchants, 202, 0, Short.MAX_VALUE, "");
+		enableLoyalty = getBoolean("loyalty", catEnchants, true, "Trident enchantment. Requires tridents to be enabled in blocksitems.cfg.");
+		loyaltyID = getInt("loyaltyID", catEnchants, 203, 0, Short.MAX_VALUE, "");
+		enableImpaling = getBoolean("impaling", catEnchants, true, "Trident enchantment. Requires tridents to be enabled in blocksitems.cfg.");
+		impalingID = getInt("impalingID", catEnchants, 204, 0, Short.MAX_VALUE, "");
+		enableRiptide = getBoolean("riptide", catEnchants, true, "Trident enchantment. Requires tridents to be enabled in blocksitems.cfg.");
+		riptideID = getInt("riptideID", catEnchants, 205, 0, Short.MAX_VALUE, "");
+		enableChanneling = getBoolean("channeling", catEnchants, true, "Trident enchantment. Requires tridents to be enabled in blocksitems.cfg.");
+		channelingID = getInt("channelingID", catEnchants, 206, 0, Short.MAX_VALUE, "");
 
 		//potions
 		levitationID = getInt("levitationID", catPotions, 27, 0, Short.MAX_VALUE, "Since this is essential for Shulkers, this is tied to Shulkers being enabled instead of having its own option.");

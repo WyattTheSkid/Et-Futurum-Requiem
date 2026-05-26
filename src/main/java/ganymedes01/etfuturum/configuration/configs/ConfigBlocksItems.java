@@ -85,6 +85,7 @@ public class ConfigBlocksItems extends ConfigBase {
 	public static boolean enableBoneBlock;
 	public static boolean enableConcrete;
 	public static boolean enableTotemUndying;
+	public static boolean enableTrident;
 	public static boolean enableRawOres;
 	public static boolean enableNewDyes;
 	public static boolean enableVanillaWoodRedstone;
@@ -331,6 +332,7 @@ public class ConfigBlocksItems extends ConfigBase {
 		enableOtherside = getBoolean("enableOtherside", catItemMisc, true, "Appears in stronghold corridor and dungeon chests.");
 
 		//Equipment Items
+		enableTrident = getBoolean("enableTrident", catItemEquipment, true, "Trident item and thrown trident projectile. Drowned are controlled separately in entities.cfg once implemented.");
 		netheriteToolDurability = getInt("netheriteToolDurability", catItemEquipment, 2031, 1, Integer.MAX_VALUE, "");
 		netheriteEnchantability = getInt("netheriteEnchantability", catItemEquipment, 15, 1, Integer.MAX_VALUE, "");
 		netheriteHarvestLevel = getInt("netheriteHarvestLevel", catItemEquipment, 4, 0, Integer.MAX_VALUE, "Netherite harvest level, Diamond is 3");

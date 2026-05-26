@@ -7,6 +7,7 @@ import java.io.File;
 public class ConfigEntities extends ConfigBase {
 
 	public static boolean enableStray;
+	public static boolean enableDrowned;
 	public static boolean enableEndermite;
 	public static boolean enableVillagerZombies;
 	public static boolean enableVillagerTurnsIntoWitch;
@@ -60,6 +61,7 @@ public class ConfigEntities extends ConfigBase {
 		//hostile
 		enableEndermite = getBoolean("enableEndermite", catHostile, true, "Rarely spawns when the player lands from Ender Pearl throws");
 		enableHusk = getBoolean("enableHusks", catHostile, true, "Desert zombie variant");
+		enableDrowned = getBoolean("enableDrowned", catHostile, true, "Underwater zombie variant. Spawning, AI, and zombie conversion are implemented separately.");
 		enableStray = getBoolean("enableStrays", catHostile, true, "Tundra skeleton variant");
 		enableShulker = getBoolean("enableShulker", catHostile, true, "Shell-lurking mobs from the End.");
 		enableVillagerZombies = getBoolean("enableZombieVillager", catHostile, true, "");

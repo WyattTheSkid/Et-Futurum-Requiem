@@ -2,26 +2,35 @@ package ganymedes01.etfuturum;
 
 import baubles.common.lib.PlayerHandler;
 import ganymedes01.etfuturum.compat.ModsList;
+import ganymedes01.etfuturum.configuration.configs.ConfigBlocksItems;
 import ganymedes01.etfuturum.configuration.configs.ConfigEnchantsPotions;
 import ganymedes01.etfuturum.configuration.configs.ConfigModCompat;
+import ganymedes01.etfuturum.enchantment.Channeling;
 import ganymedes01.etfuturum.enchantment.FrostWalker;
+import ganymedes01.etfuturum.enchantment.Impaling;
+import ganymedes01.etfuturum.enchantment.Loyalty;
 import ganymedes01.etfuturum.enchantment.Mending;
+import ganymedes01.etfuturum.enchantment.Riptide;
 import ganymedes01.etfuturum.enchantment.SwiftSneak;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -30,8 +39,13 @@ public class ModEnchantments {
 	public static Enchantment frostWalker;
 	public static Enchantment mending;
 	public static Enchantment swiftSneak;
+	public static Enchantment loyalty;
+	public static Enchantment impaling;
+	public static Enchantment riptide;
+	public static Enchantment channeling;
 
 	private static final Map<EntityLivingBase, double[]> prevMoveCache = new WeakHashMap<>();
+	private static final Map<EntityPlayer, Integer> riptideSpinTicks = new WeakHashMap<>();
 
 	public static void init() {
 		if (ConfigEnchantsPotions.enableFrostWalker)
@@ -40,12 +54,97 @@ public class ModEnchantments {
 			mending = new Mending();
 		if (ConfigEnchantsPotions.enableSwiftSneak)
 			swiftSneak = new SwiftSneak();
+		if (ConfigBlocksItems.enableTrident && ConfigEnchantsPotions.enableLoyalty)
+			loyalty = new Loyalty();
+		if (ConfigBlocksItems.enableTrident && ConfigEnchantsPotions.enableImpaling)
+			impaling = new Impaling();
+		if (ConfigBlocksItems.enableTrident && ConfigEnchantsPotions.enableRiptide)
+			riptide = new Riptide();
+		if (ConfigBlocksItems.enableTrident && ConfigEnchantsPotions.enableChanneling)
+			channeling = new Channeling();
+	}
+
+	public static int getLoyaltyModifier(ItemStack stack) {
+		return getTridentEnchantmentLevel(loyalty, stack);
+	}
+
+	public static int getImpalingModifier(ItemStack stack) {
+		return getTridentEnchantmentLevel(impaling, stack);
+	}
+
+	public static int getRiptideModifier(ItemStack stack) {
+		return getTridentEnchantmentLevel(riptide, stack);
+	}
+
+	public static boolean hasChanneling(ItemStack stack) {
+		return getTridentEnchantmentLevel(channeling, stack) > 0;
+	}
+
+	public static float getImpalingDamage(ItemStack stack, EntityLivingBase target) {
+		return isAquatic(target) ? getImpalingModifier(stack) * 2.5F : 0.0F;
+	}
+
+	public static void onLivingHurt(LivingHurtEvent event) {
+		Entity source = event.source.getEntity();
+		if (source instanceof EntityLivingBase && event.source.getSourceOfDamage() == source) {
+			ItemStack stack = ((EntityLivingBase) source).getHeldItem();
+			event.ammount += getImpalingDamage(stack, event.entityLiving);
+		}
+	}
+
+	public static void startRiptideSpin(EntityPlayer player) {
+		if (!player.worldObj.isRemote) {
+			riptideSpinTicks.put(player, 20);
+		}
+	}
+
+	private static int getTridentEnchantmentLevel(Enchantment enchantment, ItemStack stack) {
+		return enchantment == null || stack == null ? 0 : EnchantmentHelper.getEnchantmentLevel(enchantment.effectId, stack);
+	}
+
+	private static boolean isAquatic(EntityLivingBase target) {
+		return target instanceof EntityWaterMob;
+	}
+
+	private static void updateRiptideSpin(EntityLivingBase entity) {
+		if (!(entity instanceof EntityPlayer)) {
+			return;
+		}
+
+		EntityPlayer player = (EntityPlayer) entity;
+		Integer ticks = riptideSpinTicks.get(player);
+		if (ticks == null) {
+			return;
+		}
+
+		if (ticks <= 0 || player.isCollidedHorizontally) {
+			riptideSpinTicks.remove(player);
+			return;
+		}
+
+		AxisAlignedBB spinBounds = player.boundingBox.addCoord(player.motionX, player.motionY, player.motionZ).expand(0.5D, 0.5D, 0.5D);
+		List entities = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, spinBounds);
+		for (Object object : entities) {
+			if (object instanceof EntityLivingBase) {
+				player.attackTargetEntityWithCurrentItem((Entity) object);
+				player.motionX *= -0.2D;
+				player.motionY *= -0.2D;
+				player.motionZ *= -0.2D;
+				riptideSpinTicks.remove(player);
+				return;
+			}
+		}
+
+		riptideSpinTicks.put(player, ticks - 1);
 	}
 
 	// Frost Walker logic
 	public static void onLivingUpdate(EntityLivingBase entity) {
 		if (entity.worldObj.isRemote)
 			return;
+
+		updateRiptideSpin(entity);
+
 		if (!ConfigEnchantsPotions.enableFrostWalker)
 			return;
 
