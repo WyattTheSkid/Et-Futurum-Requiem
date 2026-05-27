@@ -5,6 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import ganymedes01.etfuturum.entities.EntityDrowned;
+import ganymedes01.etfuturum.client.renderer.entity.DrownedRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.MathHelper;
@@ -45,6 +47,39 @@ public class ItemTridentRenderer implements IItemRenderer {
 	private static final float TP_IDLE_ROT_Z = -35.0F;
 
 	private static final float TP_IDLE_SCALE = 0.75F;
+
+	// Drowned third-person held trident constants (can be independently modified)
+	public static float DROWNED_IDLE_HAND_X = 0.0625F;
+	public static float DROWNED_IDLE_HAND_Y = 0.125F;
+	public static float DROWNED_IDLE_HAND_Z = -0.625F;
+	
+	public static float DROWNED_IDLE_JSON_X = 11.0F / 16.0F;
+	public static float DROWNED_IDLE_JSON_Y = 17.0F / 16.0F;
+	public static float DROWNED_IDLE_JSON_Z = -2.0F / 16.0F;
+	
+	public static float DROWNED_IDLE_ROT_X = 0.0F;
+	public static float DROWNED_IDLE_ROT_Y = 60.0F;
+	public static float DROWNED_IDLE_ROT_Z = 0.0F;
+	
+	public static float DROWNED_IDLE_GRIP_X = 0.0F;
+	public static float DROWNED_IDLE_GRIP_Y = -0.625F;
+	public static float DROWNED_IDLE_GRIP_Z = 0.0F;
+	
+	public static float DROWNED_IDLE_SCALE = 1.0F;
+
+	public static float DROWNED_THROW_HAND_X = -0.08F;
+	public static float DROWNED_THROW_HAND_Y = 0.42F;
+	public static float DROWNED_THROW_HAND_Z = 0.06F;
+	
+	public static float DROWNED_THROW_ROT_X = -95.0F;
+	public static float DROWNED_THROW_ROT_Y = 90.0F;
+	public static float DROWNED_THROW_ROT_Z = 0.0F;
+	
+	public static float DROWNED_THROW_GRIP_X = 0.0F;
+	public static float DROWNED_THROW_GRIP_Y = -0.65F;
+	public static float DROWNED_THROW_GRIP_Z = 0.0F;
+	
+	public static float DROWNED_THROW_SCALE = 0.75F;
 
 	// First-person idle. Camera/held-item space, not ModelBiped arm space.
 	private static final float FP_IDLE_X = 0.0F;
@@ -114,12 +149,12 @@ public class ItemTridentRenderer implements IItemRenderer {
 
 	@Override
 	public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
-		return type == ItemRenderType.ENTITY || type == ItemRenderType.EQUIPPED || type == ItemRenderType.EQUIPPED_FIRST_PERSON;
+		return type == ItemRenderType.EQUIPPED || type == ItemRenderType.EQUIPPED_FIRST_PERSON;
 	}
 
 	@Override
 	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack stack, ItemRendererHelper helper) {
-		return type == ItemRenderType.ENTITY && (helper == ItemRendererHelper.ENTITY_BOBBING || helper == ItemRendererHelper.ENTITY_ROTATION);
+		return false;
 	}
 
 	@Override
@@ -254,7 +289,13 @@ public class ItemTridentRenderer implements IItemRenderer {
 	}
 
 	private static boolean isUsingTrident(EntityLivingBase entity, ItemStack stack) {
-		return entity instanceof EntityPlayer && stack != null && ((EntityPlayer) entity).getItemInUse() == stack;
+		if (entity instanceof EntityPlayer) {
+			return stack != null && ((EntityPlayer) entity).getItemInUse() == stack;
+		}
+		if (entity instanceof EntityDrowned) {
+			return stack != null && ((EntityDrowned) entity).getAttackTarget() != null;
+		}
+		return false;
 	}
 
 	private static void applyThirdPersonIdleTransform() {
@@ -376,5 +417,51 @@ public class ItemTridentRenderer implements IItemRenderer {
 		GL11.glRotatef(18.0F, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(-10.0F, 0.0F, 0.0F, 1.0F);
 		GL11.glScalef(0.75F, 0.75F, 0.75F);
+	}
+
+	public static void renderDrownedTrident(ModelBiped modelBiped, EntityLivingBase drowned, ItemStack stack) {
+		boolean throwing = isUsingTrident(drowned, stack);
+		
+		if (DrownedRenderer.DEBUG_DROWNED_TRIDENT) {
+			System.out.println("[DrownedDebug] ItemTridentRenderer received renderDrownedTrident, throwing=" + throwing);
+		}
+
+		GL11.glPushMatrix();
+
+		if (throwing) {
+			applyDrownedThirdPersonThrowTransform();
+		} else {
+			applyDrownedThirdPersonIdleTransform();
+		}
+
+		renderTridentModel(stack);
+
+		GL11.glPopMatrix();
+	}
+
+	private static void applyDrownedThirdPersonIdleTransform() {
+		// 1. Standard item pre-transforms from HeldItemLayer:
+		GL11.glRotatef(-90.0F, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+		GL11.glTranslatef(DROWNED_IDLE_HAND_X, DROWNED_IDLE_HAND_Y, DROWNED_IDLE_HAND_Z);
+
+		// 2. Apply JSON display transform (thirdperson_righthand):
+		GL11.glTranslatef(DROWNED_IDLE_JSON_X, DROWNED_IDLE_JSON_Y, DROWNED_IDLE_JSON_Z);
+		GL11.glRotatef(DROWNED_IDLE_ROT_X, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(DROWNED_IDLE_ROT_Y, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(DROWNED_IDLE_ROT_Z, 0.0F, 0.0F, 1.0F);
+		
+		// 3. Translation to grip point & scale:
+		GL11.glTranslatef(DROWNED_IDLE_GRIP_X, DROWNED_IDLE_GRIP_Y, DROWNED_IDLE_GRIP_Z);
+		GL11.glScalef(DROWNED_IDLE_SCALE, -DROWNED_IDLE_SCALE, -DROWNED_IDLE_SCALE);
+	}
+
+	private static void applyDrownedThirdPersonThrowTransform() {
+		GL11.glTranslatef(DROWNED_THROW_HAND_X, DROWNED_THROW_HAND_Y, DROWNED_THROW_HAND_Z);
+		GL11.glRotatef(DROWNED_THROW_ROT_X, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(DROWNED_THROW_ROT_Y, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(DROWNED_THROW_ROT_Z, 0.0F, 0.0F, 1.0F);
+		GL11.glTranslatef(DROWNED_THROW_GRIP_X, DROWNED_THROW_GRIP_Y, DROWNED_THROW_GRIP_Z);
+		GL11.glScalef(DROWNED_THROW_SCALE, DROWNED_THROW_SCALE, DROWNED_THROW_SCALE);
 	}
 }

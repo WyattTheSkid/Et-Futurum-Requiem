@@ -1,13 +1,22 @@
 package ganymedes01.etfuturum.client.renderer.entity;
 
 import ganymedes01.etfuturum.client.model.ModelDrowned;
+import ganymedes01.etfuturum.client.renderer.item.ItemTridentRenderer;
+import ganymedes01.etfuturum.ModItems;
+import ganymedes01.etfuturum.entities.EntityDrowned;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 public class DrownedRenderer extends RenderBiped {
+
+	public static final boolean DEBUG_DROWNED_TRIDENT = false;
+	private static long lastDrownedDebugTime = 0;
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/zombie/drowned.png");
 	private static final ResourceLocation OUTER_TEXTURE = new ResourceLocation("textures/entity/zombie/drowned_outer_layer.png");
@@ -39,6 +48,48 @@ public class DrownedRenderer extends RenderBiped {
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			bindTexture(OUTER_TEXTURE);
 			outerModel.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+		}
+	}
+
+	@Override
+	protected void renderEquippedItems(EntityLiving entity, float partialTicks) {
+		ItemStack stack = entity.getHeldItem();
+		boolean hasTrident = stack != null && ModItems.TRIDENT.isEnabled() && stack.getItem() == ModItems.TRIDENT.get();
+
+		if (DEBUG_DROWNED_TRIDENT) {
+			long now = System.currentTimeMillis();
+			if (now - lastDrownedDebugTime >= 2000) {
+				lastDrownedDebugTime = now;
+				boolean aiHolds = false;
+				boolean hasTarget = false;
+				boolean attackTaskActive = false;
+				if (entity instanceof EntityDrowned) {
+					EntityDrowned drowned = (EntityDrowned) entity;
+					hasTarget = drowned.getAttackTarget() != null;
+					aiHolds = drowned.getHeldItem() != null && drowned.getHeldItem().getItem() == ModItems.TRIDENT.get();
+					attackTaskActive = hasTarget && aiHolds;
+				}
+				System.out.println(String.format(
+					"[DrownedDebug] Render: %s, hasTridentEquipped: %b, slot: 0, path: DrownedRenderer.renderEquippedItems, transform: RightArm postRender space, AI holds: %b, hasTarget: %b, attackTaskActive: %b",
+					entity.toString(), hasTrident, aiHolds, hasTarget, attackTaskActive
+				));
+			}
+		}
+
+		if (hasTrident) {
+			GL11.glPushMatrix();
+			this.drownedModel.bipedRightArm.postRender(0.0625F);
+			
+			ItemTridentRenderer.renderDrownedTrident(this.drownedModel, entity, stack);
+			
+			GL11.glPopMatrix();
+
+			// Temporarily remove held item so RenderBiped doesn't render it
+			entity.setCurrentItemOrArmor(0, null);
+			super.renderEquippedItems(entity, partialTicks);
+			entity.setCurrentItemOrArmor(0, stack);
+		} else {
+			super.renderEquippedItems(entity, partialTicks);
 		}
 	}
 

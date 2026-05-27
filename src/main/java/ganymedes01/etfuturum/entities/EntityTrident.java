@@ -67,6 +67,8 @@ public class EntityTrident extends EntityArrow implements IEntityAdditionalSpawn
 		if (shooter instanceof EntityPlayer) {
 			canBePickedUp = 1;
 			throwerName = ((EntityPlayer) shooter).getCommandSenderName();
+		} else {
+			canBePickedUp = 0;
 		}
 
 		setLocationAndAngles(shooter.posX, shooter.posY + (double) shooter.getEyeHeight(), shooter.posZ, shooter.rotationYaw, shooter.rotationPitch);

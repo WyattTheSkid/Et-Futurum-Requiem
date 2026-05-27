@@ -11,6 +11,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
@@ -22,6 +23,11 @@ public class ItemTrident extends BaseItem {
 	private static final float ATTACK_DAMAGE = 8.0F;
 	private static final int MAX_USE_DURATION = 72000;
 	private static final int MIN_THROW_USE_TICKS = 10;
+
+	@Override
+	public EnumRarity getRarity(ItemStack stack) {
+		return EnumRarity.rare;
+	}
 
 	public ItemTrident() {
 		super("trident");
