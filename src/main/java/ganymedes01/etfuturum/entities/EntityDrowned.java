@@ -43,8 +43,20 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 		super(world);
 		stepHeight = 1.0F;
 		getNavigator().setBreakDoors(false);
+
+		// Remove default melee and swimming tasks so they don't float and only melee when not holding a trident
+		java.util.Iterator<net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry> iterator = tasks.taskEntries.iterator();
+		while (iterator.hasNext()) {
+			net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry entry = iterator.next();
+			if (entry.action instanceof net.minecraft.entity.ai.EntityAIAttackOnCollide || entry.action instanceof net.minecraft.entity.ai.EntityAISwimming) {
+				iterator.remove();
+			}
+		}
+
 		tasks.addTask(1, new AIGoToWater(this, 1.0D));
-		tasks.addTask(1, new AITridentAttack(this, 1.0D, 40, 10.0F));
+		tasks.addTask(1, new AITridentAttack(this, 1.0D, 40, 20.0F));
+		tasks.addTask(2, new AIDrownedMeleeAttack(this, EntityPlayer.class, 1.0D, false));
+		tasks.addTask(4, new AIDrownedMeleeAttack(this, net.minecraft.entity.passive.EntityVillager.class, 1.0D, true));
 	}
 
 	@Override
@@ -421,6 +433,25 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 			}
 
 			return null;
+		}
+	}
+
+	private static class AIDrownedMeleeAttack extends net.minecraft.entity.ai.EntityAIAttackOnCollide {
+		private final EntityDrowned drowned;
+
+		public AIDrownedMeleeAttack(EntityDrowned drowned, Class<? extends net.minecraft.entity.Entity> targetClass, double speed, boolean longMemory) {
+			super(drowned, targetClass, speed, longMemory);
+			this.drowned = drowned;
+		}
+
+		@Override
+		public boolean shouldExecute() {
+			return !drowned.isHoldingTrident() && super.shouldExecute();
+		}
+
+		@Override
+		public boolean continueExecuting() {
+			return !drowned.isHoldingTrident() && super.continueExecuting();
 		}
 	}
 }

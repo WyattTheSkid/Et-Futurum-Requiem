@@ -293,7 +293,7 @@ public class ItemTridentRenderer implements IItemRenderer {
 			return stack != null && ((EntityPlayer) entity).getItemInUse() == stack;
 		}
 		if (entity instanceof EntityDrowned) {
-			return stack != null && ((EntityDrowned) entity).getAttackTarget() != null;
+			return stack != null && ((EntityDrowned) entity).isThrowingTrident();
 		}
 		return false;
 	}
