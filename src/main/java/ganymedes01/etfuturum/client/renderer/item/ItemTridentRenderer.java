@@ -422,7 +422,7 @@ public class ItemTridentRenderer implements IItemRenderer {
 	public static void renderDrownedTrident(ModelBiped modelBiped, EntityLivingBase drowned, ItemStack stack) {
 		boolean throwing = isUsingTrident(drowned, stack);
 		
-		if (DrownedRenderer.DEBUG_DROWNED_TRIDENT) {
+		if (EntityDrowned.DEBUG_DROWNED) {
 			System.out.println("[DrownedDebug] ItemTridentRenderer received renderDrownedTrident, throwing=" + throwing);
 		}
 

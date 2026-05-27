@@ -39,9 +39,27 @@ public class ModelDrowned extends ModelZombie {
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entity) {
 		super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entity);
 
-		if (isThrowingTrident(entity)) {
-			bipedRightArm.rotateAngleX = bipedRightArm.rotateAngleX * 0.5F - (float) Math.PI;
-			bipedRightArm.rotateAngleY = 0.0F;
+		if (entity instanceof EntityDrowned) {
+			EntityDrowned drowned = (EntityDrowned) entity;
+			if (isThrowingTrident(entity)) {
+				bipedRightArm.rotateAngleX = bipedRightArm.rotateAngleX * 0.5F - (float) Math.PI;
+				bipedRightArm.rotateAngleY = 0.0F;
+			} else {
+				// Reset arms to normal ModelBiped walk angles so they hang down instead of being raised like a zombie
+				bipedRightArm.rotateAngleX = net.minecraft.util.MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
+				bipedLeftArm.rotateAngleX = net.minecraft.util.MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
+				
+				bipedRightArm.rotateAngleZ = 0.0F;
+				bipedLeftArm.rotateAngleZ = 0.0F;
+				bipedRightArm.rotateAngleY = 0.0F;
+				bipedLeftArm.rotateAngleY = 0.0F;
+				
+				// Standard idle/walking arm bobbing (from ModelBiped)
+				bipedRightArm.rotateAngleZ += net.minecraft.util.MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+				bipedLeftArm.rotateAngleZ -= net.minecraft.util.MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+				bipedRightArm.rotateAngleX += net.minecraft.util.MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+				bipedLeftArm.rotateAngleX -= net.minecraft.util.MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
+			}
 		}
 	}
 
@@ -51,6 +69,6 @@ public class ModelDrowned extends ModelZombie {
 		}
 
 		ItemStack stack = ((EntityDrowned) entity).getHeldItem();
-		return stack != null && ModItems.TRIDENT.isEnabled() && stack.getItem() == ModItems.TRIDENT.get() && ((EntityDrowned) entity).getAttackTarget() != null;
+		return stack != null && ModItems.TRIDENT.isEnabled() && stack.getItem() == ModItems.TRIDENT.get() && ((EntityDrowned) entity).isThrowingTrident();
 	}
 }

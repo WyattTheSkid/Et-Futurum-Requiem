@@ -56,22 +56,20 @@ public class DrownedRenderer extends RenderBiped {
 		ItemStack stack = entity.getHeldItem();
 		boolean hasTrident = stack != null && ModItems.TRIDENT.isEnabled() && stack.getItem() == ModItems.TRIDENT.get();
 
-		if (DEBUG_DROWNED_TRIDENT) {
+		if (EntityDrowned.DEBUG_DROWNED) {
 			long now = System.currentTimeMillis();
-			if (now - lastDrownedDebugTime >= 2000) {
+			if (now - lastDrownedDebugTime >= 1000) {
 				lastDrownedDebugTime = now;
 				boolean aiHolds = false;
-				boolean hasTarget = false;
-				boolean attackTaskActive = false;
+				boolean isThrowing = false;
 				if (entity instanceof EntityDrowned) {
 					EntityDrowned drowned = (EntityDrowned) entity;
-					hasTarget = drowned.getAttackTarget() != null;
 					aiHolds = drowned.getHeldItem() != null && drowned.getHeldItem().getItem() == ModItems.TRIDENT.get();
-					attackTaskActive = hasTarget && aiHolds;
+					isThrowing = drowned.isThrowingTrident();
 				}
 				System.out.println(String.format(
-					"[DrownedDebug] Render: %s, hasTridentEquipped: %b, slot: 0, path: DrownedRenderer.renderEquippedItems, transform: RightArm postRender space, AI holds: %b, hasTarget: %b, attackTaskActive: %b",
-					entity.toString(), hasTrident, aiHolds, hasTarget, attackTaskActive
+					"[DrownedDebug] Render: %s, Renderer: DrownedRenderer, Model: ModelDrowned, hasTridentEquipped: %b, isThrowingTrident: %b, path: DrownedRenderer.renderEquippedItems, transform: RightArm postRender space, activeTransform: %s",
+					entity.toString(), hasTrident, isThrowing, isThrowing ? "THROW" : "IDLE"
 				));
 			}
 		}

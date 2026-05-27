@@ -35,6 +35,8 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 	private static final float NAUTILUS_SHELL_CHANCE = 0.03F;
 	private static final int SEA_LEVEL = 63;
 
+	public static final boolean DEBUG_DROWNED = false;
+
 	private boolean hasNautilusShell;
 
 	public EntityDrowned(World world) {
@@ -43,6 +45,20 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 		getNavigator().setBreakDoors(false);
 		tasks.addTask(1, new AIGoToWater(this, 1.0D));
 		tasks.addTask(1, new AITridentAttack(this, 1.0D, 40, 10.0F));
+	}
+
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		dataWatcher.addObject(21, Byte.valueOf((byte) 0));
+	}
+
+	public boolean isThrowingTrident() {
+		return dataWatcher.getWatchableObjectByte(21) == 1;
+	}
+
+	public void setThrowingTrident(boolean throwing) {
+		dataWatcher.updateObject(21, Byte.valueOf((byte) (throwing ? 1 : 0)));
 	}
 
 	@Override
@@ -125,6 +141,18 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 			} else if (target == null && isInWater() && !worldObj.isDaytime() && posY < SEA_LEVEL - 2) {
 				motionY += 0.005D;
 			}
+
+			if (DEBUG_DROWNED && ticksExisted % 40 == 0) {
+				String mode = isHoldingTrident() ? "ranged" : "melee";
+				double dist = target != null ? getDistanceToEntity(target) : -1.0D;
+				boolean canSee = target != null && getEntitySenses().canSee(target);
+				boolean isThrowing = isThrowingTrident();
+				System.out.println(String.format(
+					"[DrownedDebug] ID: %d, Held: %s, HasTrident: %b, Target: %s, Dist: %.2f, CanSee: %b, AI: %s, isThrowing: %b",
+					getEntityId(), getHeldItem() != null ? getHeldItem().getDisplayName() : "none", isHoldingTrident(),
+					target != null ? target.toString() : "null", dist, canSee, mode, isThrowing
+				));
+			}
 		}
 
 		super.onLivingUpdate();
@@ -137,6 +165,9 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 
 	@Override
 	public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
+		if (DEBUG_DROWNED) {
+			System.out.println("[DrownedDebug] attackEntityWithRangedAttack called for Drowned " + getEntityId() + " targeting " + target);
+		}
 		if (!isHoldingTrident()) {
 			return;
 		}
@@ -152,7 +183,13 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 	}
 
 	public boolean shouldAttack(EntityLivingBase target) {
-		return target == null || !(target instanceof EntityPlayer) || !worldObj.isDaytime() || target.isInWater();
+		if (target == null) {
+			return true;
+		}
+		if (target == getAITarget()) {
+			return true;
+		}
+		return !(target instanceof EntityPlayer) || !worldObj.isDaytime() || target.isInWater();
 	}
 
 	@Override
@@ -244,22 +281,85 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 		motionZ += zDiff / distance * speed;
 	}
 
-	private static class AITridentAttack extends EntityAIArrowAttack {
+	private static class AITridentAttack extends EntityAIBase {
 		private final EntityDrowned drowned;
+		private EntityLivingBase attackTarget;
+		private int attackCooldown = -1;
+		private double speed;
+		private int attackInterval;
+		private float maxDistanceSq;
+		private int seeTime;
 
 		private AITridentAttack(EntityDrowned drowned, double speed, int attackInterval, float maxDistance) {
-			super(drowned, speed, attackInterval, maxDistance);
 			this.drowned = drowned;
+			this.speed = speed;
+			this.attackInterval = attackInterval;
+			this.maxDistanceSq = maxDistance * maxDistance;
+			this.setMutexBits(3);
 		}
 
 		@Override
 		public boolean shouldExecute() {
-			return super.shouldExecute() && drowned.isHoldingTrident() && drowned.shouldAttack(drowned.getAttackTarget());
+			EntityLivingBase target = drowned.getAttackTarget();
+			if (target == null) {
+				return false;
+			}
+			this.attackTarget = target;
+			return drowned.isHoldingTrident() && drowned.shouldAttack(target);
 		}
 
 		@Override
 		public boolean continueExecuting() {
-			return super.continueExecuting() && drowned.isHoldingTrident() && drowned.shouldAttack(drowned.getAttackTarget());
+			return shouldExecute() || !drowned.getNavigator().noPath();
+		}
+
+		@Override
+		public void resetTask() {
+			this.attackTarget = null;
+			this.seeTime = 0;
+			this.attackCooldown = -1;
+			drowned.setThrowingTrident(false);
+		}
+
+		@Override
+		public void updateTask() {
+			double distSq = drowned.getDistanceSq(attackTarget.posX, attackTarget.boundingBox.minY, attackTarget.posZ);
+			boolean canSee = drowned.getEntitySenses().canSee(attackTarget);
+
+			if (canSee) {
+				++seeTime;
+			} else {
+				seeTime = 0;
+			}
+
+			if (distSq <= maxDistanceSq && seeTime >= 20) {
+				drowned.getNavigator().clearPathEntity();
+			} else {
+				drowned.getNavigator().tryMoveToEntityLiving(attackTarget, speed);
+			}
+
+			drowned.getLookHelper().setLookPositionWithEntity(attackTarget, 30.0F, 30.0F);
+
+			if (--attackCooldown == 0) {
+				if (distSq > maxDistanceSq || !canSee) {
+					attackCooldown = attackInterval;
+					drowned.setThrowingTrident(false);
+					return;
+				}
+
+				float factor = MathHelper.sqrt_double(distSq) / (float)Math.sqrt(maxDistanceSq);
+				drowned.attackEntityWithRangedAttack(attackTarget, factor);
+				attackCooldown = attackInterval;
+				drowned.setThrowingTrident(false);
+			} else if (attackCooldown < 0) {
+				attackCooldown = attackInterval;
+			}
+
+			if (attackCooldown <= 24 && canSee && distSq <= maxDistanceSq) {
+				drowned.setThrowingTrident(true);
+			} else {
+				drowned.setThrowingTrident(false);
+			}
 		}
 	}
 
