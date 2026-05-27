@@ -443,17 +443,19 @@ public class ItemTridentRenderer implements IItemRenderer {
 		// 1. Standard item pre-transforms from HeldItemLayer:
 		GL11.glRotatef(-90.0F, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-		GL11.glTranslatef(DROWNED_IDLE_HAND_X, DROWNED_IDLE_HAND_Y, DROWNED_IDLE_HAND_Z);
+		GL11.glTranslatef(0.0625F, 0.125F, -0.625F);
 
 		// 2. Apply JSON display transform (thirdperson_righthand):
-		GL11.glTranslatef(DROWNED_IDLE_JSON_X, DROWNED_IDLE_JSON_Y, DROWNED_IDLE_JSON_Z);
-		GL11.glRotatef(DROWNED_IDLE_ROT_X, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(DROWNED_IDLE_ROT_Y, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(DROWNED_IDLE_ROT_Z, 0.0F, 0.0F, 1.0F);
-		
-		// 3. Translation to grip point & scale:
-		GL11.glTranslatef(DROWNED_IDLE_GRIP_X, DROWNED_IDLE_GRIP_Y, DROWNED_IDLE_GRIP_Z);
-		GL11.glScalef(DROWNED_IDLE_SCALE, -DROWNED_IDLE_SCALE, -DROWNED_IDLE_SCALE);
+		// Translation from JSON: [ 11, 17, -2 ]
+		GL11.glTranslatef(11.0F / 16.0F, 17.0F / 16.0F, -2.0F / 16.0F);
+		// Rotation from JSON: [ 0, 60, 0 ]
+		GL11.glRotatef(60.0F, 0.0F, 1.0F, 0.0F);
+
+		// 3. Translate by [-0.5, -0.5, -0.5]
+		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+
+		// 4. Scale by [1.0, -1.0, -1.0]
+		GL11.glScalef(1.0F, -1.0F, -1.0F);
 	}
 
 	private static void applyDrownedThirdPersonThrowTransform() {
