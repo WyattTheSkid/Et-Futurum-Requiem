@@ -36,6 +36,7 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 	private static final int SEA_LEVEL = 63;
 
 	public static final boolean DEBUG_DROWNED = false;
+	private static final boolean DEBUG_DROWNED_AI = false;
 
 	private boolean hasNautilusShell;
 
@@ -53,10 +54,19 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 			}
 		}
 
+		// Clear default target tasks to apply drowned-specific targeting
+		targetTasks.taskEntries.clear();
+		targetTasks.addTask(1, new net.minecraft.entity.ai.EntityAIHurtByTarget(this, true));
+		targetTasks.addTask(2, new AITargetPlayer(this, EntityPlayer.class, 0, true));
+		targetTasks.addTask(3, new net.minecraft.entity.ai.EntityAINearestAttackableTarget(this, net.minecraft.entity.passive.EntityVillager.class, 0, false));
+		targetTasks.addTask(3, new net.minecraft.entity.ai.EntityAINearestAttackableTarget(this, net.minecraft.entity.monster.EntityIronGolem.class, 0, true));
+
 		tasks.addTask(1, new AIGoToWater(this, 1.0D));
-		tasks.addTask(1, new AITridentAttack(this, 1.0D, 40, 20.0F));
+		tasks.addTask(2, new AITridentAttack(this, 1.0D, 40, 10.0F));
 		tasks.addTask(2, new AIDrownedMeleeAttack(this, EntityPlayer.class, 1.0D, false));
 		tasks.addTask(4, new AIDrownedMeleeAttack(this, net.minecraft.entity.passive.EntityVillager.class, 1.0D, true));
+		tasks.addTask(5, new AIGoToBeach(this, 1.0D));
+		tasks.addTask(6, new AISwimUp(this, 1.0D, SEA_LEVEL));
 	}
 
 	@Override
@@ -89,12 +99,7 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 
 	@Override
 	public void func_146070_a(boolean enabled) {
-		super.func_146070_a(false);
-	}
-
-	@Override
-	public boolean func_146072_bX() {
-		return false;
+		super.func_146070_a(enabled);
 	}
 
 	@Override
@@ -138,32 +143,52 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 	}
 
 	@Override
-	public void setAttackTarget(EntityLivingBase target) {
-		super.setAttackTarget(shouldAttack(target) ? target : null);
-	}
-
-	@Override
 	public void onLivingUpdate() {
 		if (!worldObj.isRemote) {
 			EntityLivingBase target = getAttackTarget();
-			if (!shouldAttack(target)) {
-				setAttackTarget(null);
-			} else if (target != null && isInWater() && (target.isInWater() || !worldObj.isDaytime())) {
+			if (target != null && isInWater() && (target.isInWater() || !worldObj.isDaytime())) {
 				swimToward(target.posX, target.boundingBox.minY + (double) target.height * 0.3333333333333333D, target.posZ, 0.01D);
-			} else if (target == null && isInWater() && !worldObj.isDaytime() && posY < SEA_LEVEL - 2) {
-				motionY += 0.005D;
 			}
 
-			if (DEBUG_DROWNED && ticksExisted % 40 == 0) {
-				String mode = isHoldingTrident() ? "ranged" : "melee";
+			if (DEBUG_DROWNED_AI && ticksExisted % 40 == 0) {
 				double dist = target != null ? getDistanceToEntity(target) : -1.0D;
-				boolean canSee = target != null && getEntitySenses().canSee(target);
-				boolean isThrowing = isThrowingTrident();
 				System.out.println(String.format(
-					"[DrownedDebug] ID: %d, Held: %s, HasTrident: %b, Target: %s, Dist: %.2f, CanSee: %b, AI: %s, isThrowing: %b",
-					getEntityId(), getHeldItem() != null ? getHeldItem().getDisplayName() : "none", isHoldingTrident(),
-					target != null ? target.toString() : "null", dist, canSee, mode, isThrowing
+					"[DrownedAI] ID: %d, Target: %s, Dist: %.2f, Daytime: %b, TargetInWater: %b, shouldAttack: %b, HeldTrident: %b",
+					getEntityId(), target != null ? target.getClass().getSimpleName() : "null", dist, worldObj.isDaytime(),
+					target != null && target.isInWater(), shouldAttack(target), isHoldingTrident()
 				));
+			}
+
+			// Custom Trident pickup logic
+			if (canPickUpLoot() && !dead && worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) {
+				java.util.List items = worldObj.getEntitiesWithinAABB(net.minecraft.entity.item.EntityItem.class, boundingBox.expand(1.0D, 0.0D, 1.0D));
+				for (Object obj : items) {
+					net.minecraft.entity.item.EntityItem itemEntity = (net.minecraft.entity.item.EntityItem) obj;
+					if (!itemEntity.isDead && itemEntity.getEntityItem() != null) {
+						ItemStack stack = itemEntity.getEntityItem();
+						if (ModItems.TRIDENT.isEnabled() && stack.getItem() == ModItems.TRIDENT.get()) {
+							ItemStack current = getEquipmentInSlot(0);
+							boolean shouldPickup = false;
+							if (current == null) {
+								shouldPickup = true;
+							} else if (current.getItem() == ModItems.TRIDENT.get()) {
+								if (stack.getItemDamage() < current.getItemDamage() || (stack.hasTagCompound() && !current.hasTagCompound())) {
+									shouldPickup = true;
+								}
+							}
+							
+							if (shouldPickup) {
+								if (current != null && rand.nextFloat() - 0.1F < equipmentDropChances[0]) {
+									entityDropItem(current, 0.0F);
+								}
+								setCurrentItemOrArmor(0, stack);
+								equipmentDropChances[0] = 2.0F;
+								onItemPickup(itemEntity, 1);
+								itemEntity.setDead();
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -452,6 +477,129 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 		@Override
 		public boolean continueExecuting() {
 			return !drowned.isHoldingTrident() && super.continueExecuting();
+		}
+	}
+
+	private static class AITargetPlayer extends net.minecraft.entity.ai.EntityAINearestAttackableTarget {
+		private final EntityDrowned drowned;
+
+		public AITargetPlayer(EntityDrowned drowned, Class targetClass, int targetChance, boolean shouldCheckSight) {
+			super(drowned, targetClass, targetChance, shouldCheckSight);
+			this.drowned = drowned;
+		}
+
+		@Override
+		protected boolean isSuitableTarget(EntityLivingBase target, boolean checkSight) {
+			return super.isSuitableTarget(target, checkSight) && drowned.shouldAttack(target);
+		}
+	}
+
+	private static class AIGoToBeach extends net.minecraft.entity.ai.EntityAIBase {
+		private final EntityDrowned drowned;
+		private final double speed;
+		private double targetX, targetY, targetZ;
+
+		public AIGoToBeach(EntityDrowned drowned, double speed) {
+			this.drowned = drowned;
+			this.speed = speed;
+			this.setMutexBits(1);
+		}
+
+		@Override
+		public boolean shouldExecute() {
+			if (drowned.worldObj.isDaytime() || !drowned.isInWater() || drowned.posY < SEA_LEVEL - 3) {
+				return false;
+			}
+			Vec3 target = findBeach();
+			if (target == null) {
+				return false;
+			}
+			this.targetX = target.xCoord;
+			this.targetY = target.yCoord;
+			this.targetZ = target.zCoord;
+			return true;
+		}
+
+		@Override
+		public boolean continueExecuting() {
+			return !drowned.getNavigator().noPath();
+		}
+
+		@Override
+		public void startExecuting() {
+			drowned.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, speed);
+		}
+
+		private Vec3 findBeach() {
+			Random random = drowned.getRNG();
+			int x = net.minecraft.util.MathHelper.floor_double(drowned.posX);
+			int y = net.minecraft.util.MathHelper.floor_double(drowned.boundingBox.minY);
+			int z = net.minecraft.util.MathHelper.floor_double(drowned.posZ);
+
+			for (int i = 0; i < 10; ++i) {
+				int targetX = x + random.nextInt(20) - 10;
+				int targetY = y + random.nextInt(6) - 3;
+				int targetZ = z + random.nextInt(20) - 10;
+				if (drowned.worldObj.getBlock(targetX, targetY, targetZ).isNormalCube() && drowned.worldObj.getBlock(targetX, targetY + 1, targetZ).getMaterial() == Material.air && drowned.worldObj.getBlock(targetX, targetY + 2, targetZ).getMaterial() == Material.air) {
+					return Vec3.createVectorHelper(targetX, targetY + 1, targetZ);
+				}
+			}
+			return null;
+		}
+	}
+
+	private static class AISwimUp extends net.minecraft.entity.ai.EntityAIBase {
+		private final EntityDrowned drowned;
+		private final double speed;
+		private final int targetY;
+		private boolean obstructed;
+
+		public AISwimUp(EntityDrowned drowned, double speed, int targetY) {
+			this.drowned = drowned;
+			this.speed = speed;
+			this.targetY = targetY;
+			this.setMutexBits(1);
+		}
+
+		@Override
+		public boolean shouldExecute() {
+			return !drowned.worldObj.isDaytime() && drowned.isInWater() && drowned.posY < targetY - 2;
+		}
+
+		@Override
+		public boolean continueExecuting() {
+			return shouldExecute() && !obstructed;
+		}
+
+		@Override
+		public void updateTask() {
+			if (drowned.posY < targetY - 1 && (drowned.getNavigator().noPath() || isCloseToPathTarget())) {
+				Vec3 vec = net.minecraft.entity.ai.RandomPositionGenerator.findRandomTargetBlockTowards(drowned, 4, 8, Vec3.createVectorHelper(drowned.posX, targetY - 1, drowned.posZ));
+				if (vec == null) {
+					obstructed = true;
+					return;
+				}
+				drowned.getNavigator().tryMoveToXYZ(vec.xCoord, vec.yCoord, vec.zCoord, speed);
+			}
+		}
+
+		@Override
+		public void startExecuting() {
+			obstructed = false;
+		}
+
+		private boolean isCloseToPathTarget() {
+			net.minecraft.pathfinding.PathEntity path = drowned.getNavigator().getPath();
+			if (path != null) {
+				net.minecraft.pathfinding.PathPoint point = path.getFinalPathPoint();
+				if (point != null) {
+					double sqDist = drowned.getDistanceSq(point.xCoord, point.yCoord, point.zCoord);
+					if (sqDist < 4.0D) {
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 }
