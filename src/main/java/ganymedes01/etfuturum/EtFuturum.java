@@ -184,6 +184,8 @@ public class EtFuturum {
 	@EventHandler
 	@SuppressWarnings("unchecked")
 	public void preInit(FMLPreInitializationEvent event) {
+		ganymedes01.etfuturum.core.handlers.creativetabs.ModernCreativeTabs.init();
+		
 		if(ModsList.IRON_CHEST.isLoaded()) {
 			CompatIronChests.init();
 		}
