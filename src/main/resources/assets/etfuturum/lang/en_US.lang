@@ -1,6 +1,18 @@
 # Creative Tab
 itemGroup.etfuturum.items=Et Futurum Items
 itemGroup.etfuturum.blocks=Et Futurum Blocks
+itemGroup.buildingBlocks=Building Blocks
+itemGroup.coloredBlocks=Colored Blocks
+itemGroup.naturalBlocks=Natural Blocks
+itemGroup.functionalBlocks=Functional Blocks
+itemGroup.redstoneBlocks=Redstone Blocks
+itemGroup.hotbar=Saved Hotbars
+itemGroup.tools=Tools & Utilities
+itemGroup.combat=Combat
+itemGroup.food=Food & Drinks
+itemGroup.ingredients=Ingredients
+itemGroup.spawnEgg=Spawn Eggs
+itemGroup.op=Operator Utilities
 
 # Enchantments
 enchantment.frost_walker=Frost Walker

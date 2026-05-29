@@ -284,6 +284,9 @@ public class EtFuturumEarlyMixins implements IFMLLoadingPlugin, IEarlyMixinLoade
 			mixins.add("client.MixinRendererLivingEntity");
 			mixins.add("items.MixinRenderBiped");
 			mixins.add("items.MixinRenderPlayer");
+			if (ConfigMixins.modernCreativeInventory) {
+				mixins.add("client.MixinGuiContainerCreative");
+			}
 		}
 
 		if (ConfigMixins.thinPanes) {
