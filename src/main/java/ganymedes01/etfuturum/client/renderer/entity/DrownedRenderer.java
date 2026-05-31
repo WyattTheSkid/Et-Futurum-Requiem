@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 
 public class DrownedRenderer extends RenderBiped {
@@ -36,6 +37,29 @@ public class DrownedRenderer extends RenderBiped {
 	protected void func_82421_b() {
 		field_82423_g = new ModelDrowned(1.0F, true);
 		field_82425_h = new ModelDrowned(0.5F, true);
+	}
+
+	/**
+	 * Applies swimming body tilt rotation.
+	 * Source: 1.21.4 DrownedRenderer.setupRotations() lines 47-52
+	 * When swimming, the drowned's body tilts forward (face down).
+	 * The tilt is proportional to swimAmount and offset by -10 degrees minus head pitch.
+	 */
+	@Override
+	protected void rotateCorpse(EntityLivingBase entity, float ageInTicks, float headYaw, float partialTicks) {
+		super.rotateCorpse(entity, ageInTicks, headYaw, partialTicks);
+		if (entity instanceof EntityDrowned) {
+			float swimAmount = ((EntityDrowned) entity).getSwimAmount();
+			if (swimAmount > 0.0F) {
+				// Source: 1.21.4 DrownedRenderer.setupRotations()
+				// f1 = -10.0F - entity.xRot (head pitch)
+				// f2 = lerp(swimAmount, 0, f1)
+				// Rotates around the vertical center of the bounding box
+				float targetTilt = -10.0F - entity.rotationPitch;
+				float tilt = swimAmount * targetTilt;
+				GL11.glRotatef(tilt, 1.0F, 0.0F, 0.0F);
+			}
+		}
 	}
 
 	@Override

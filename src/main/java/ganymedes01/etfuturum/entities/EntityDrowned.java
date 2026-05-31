@@ -40,6 +40,14 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 
 	private boolean hasNautilusShell;
 
+	// Swim animation state - mirrors 1.21.4 LivingEntity.swimAmount / 1.13.2 getSwimAnimation()
+	// Smoothly transitions 0.0 (standing) to 1.0 (fully swimming) for animation blending
+	private float swimAmount;
+	private float swimAmountO;
+
+	// Mirrors 1.21.4 Drowned.searchingForLand - true when swimming up to surface
+	private boolean searchingForLand;
+
 	public EntityDrowned(World world) {
 		super(world);
 		stepHeight = 1.0F;
@@ -69,10 +77,24 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 		tasks.addTask(6, new AISwimUp(this, 1.0D, SEA_LEVEL));
 	}
 
+	/**
+	 * Returns the swim animation amount (0.0 = standing, 1.0 = fully swimming).
+	 * Used by ModelDrowned for blending between standing and swimming poses.
+	 */
+	public float getSwimAmount() {
+		return swimAmount;
+	}
+
+	public void setSearchingForLand(boolean searching) {
+		this.searchingForLand = searching;
+	}
+
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		dataWatcher.addObject(21, Byte.valueOf((byte) 0));
+		dataWatcher.addObject(22, Byte.valueOf((byte) 0));
+		dataWatcher.addObject(23, Byte.valueOf((byte) 0));
 	}
 
 	public boolean isThrowingTrident() {
@@ -81,6 +103,30 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 
 	public void setThrowingTrident(boolean throwing) {
 		dataWatcher.updateObject(21, Byte.valueOf((byte) (throwing ? 1 : 0)));
+	}
+
+	public boolean isSwimming() {
+		return dataWatcher.getWatchableObjectByte(22) == 1;
+	}
+
+	public void setSwimming(boolean swimming) {
+		dataWatcher.updateObject(22, Byte.valueOf((byte) (swimming ? 1 : 0)));
+	}
+
+	public boolean isAggressive() {
+		return dataWatcher.getWatchableObjectByte(23) == 1;
+	}
+
+	public void setAggressive(boolean aggressive) {
+		dataWatcher.updateObject(23, Byte.valueOf((byte) (aggressive ? 1 : 0)));
+	}
+
+	public boolean wantsToSwim() {
+		if (searchingForLand) {
+			return true;
+		}
+		EntityLivingBase target = getAttackTarget();
+		return target != null && target.isInWater();
 	}
 
 	@Override
@@ -144,7 +190,19 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 
 	@Override
 	public void onLivingUpdate() {
+		// Update swim animation amount - drowned always swim-pose when submerged in water and wanting to swim
+		// Source: 1.21.4 LivingEntity swim amount update
+		swimAmountO = swimAmount;
+		if (isSwimming()) {
+			swimAmount = Math.min(1.0F, swimAmount + 0.09F);
+		} else {
+			swimAmount = Math.max(0.0F, swimAmount - 0.09F);
+		}
+
 		if (!worldObj.isRemote) {
+			setSwimming(isInWater() && wantsToSwim());
+			setAggressive(getAttackTarget() != null);
+
 			EntityLivingBase target = getAttackTarget();
 			if (target != null && isInWater() && (target.isInWater() || !worldObj.isDaytime())) {
 				swimToward(target.posX, target.boundingBox.minY + (double) target.height * 0.3333333333333333D, target.posZ, 0.01D);
@@ -527,6 +585,8 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 
 		@Override
 		public void startExecuting() {
+			// Source: 1.21.4 DrownedGoToBeachGoal.start()
+			drowned.setSearchingForLand(false);
 			drowned.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, speed);
 		}
 
@@ -585,7 +645,15 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 
 		@Override
 		public void startExecuting() {
+			// Source: 1.21.4 DrownedSwimUpGoal.start()
+			drowned.setSearchingForLand(true);
 			obstructed = false;
+		}
+
+		@Override
+		public void resetTask() {
+			// Source: 1.21.4 DrownedSwimUpGoal.stop()
+			drowned.setSearchingForLand(false);
 		}
 
 		private boolean isCloseToPathTarget() {
