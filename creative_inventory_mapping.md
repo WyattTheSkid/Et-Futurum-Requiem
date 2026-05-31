@@ -4,7 +4,7 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 
 ## Tab: Building Blocks (`itemGroup.buildingBlocks`)
 | Index | 1.21.4 Registry ID | 1.7.10 / EFR Constructor | Status | Notes |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 0 | `minecraft:oak_log` | `new ItemStack(Blocks.log, 1, 0)` | exact legacy equivalent |  |
 | 1 | `minecraft:oak_wood` | `new ItemStack(ModBlocks.BARK.get(), 1, 0)` | EFR backport equivalent | Bark block |
 | 2 | `minecraft:stripped_oak_log` | `new ItemStack(ModBlocks.LOG_STRIPPED.get(), 1, 0)` | EFR backport equivalent |  |
@@ -122,14 +122,14 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 114 | `minecraft:pale_oak_trapdoor` | `Omitted` | missing | Not backported |
 | 115 | `minecraft:pale_oak_pressure_plate` | `Omitted` | missing | Not backported |
 | 116 | `minecraft:pale_oak_button` | `Omitted` | missing | Not backported |
-| 117 | `minecraft:bamboo_block` | `Omitted` | missing | Not backported |
+| 117 | `minecraft:bamboo_block` | `new ItemStack(ModBlocks.BAMBOO_BLOCK.get())` | EFR backport equivalent | Automatically resolved |
 | 118 | `minecraft:stripped_bamboo_block` | `Omitted` | missing | Not backported |
 | 119 | `minecraft:bamboo_planks` | `new ItemStack(ModBlocks.WOOD_PLANKS.get(), 1, 4)` | EFR backport equivalent |  |
-| 120 | `minecraft:bamboo_mosaic` | `Omitted` | missing | Not backported |
+| 120 | `minecraft:bamboo_mosaic` | `new ItemStack(ModBlocks.BAMBOO_MOSAIC.get())` | EFR backport equivalent | Automatically resolved |
 | 121 | `minecraft:bamboo_stairs` | `new ItemStack(ModBlocks.BAMBOO_STAIRS.get())` | EFR backport equivalent |  |
-| 122 | `minecraft:bamboo_mosaic_stairs` | `Omitted` | missing | Not backported |
+| 122 | `minecraft:bamboo_mosaic_stairs` | `new ItemStack(ModBlocks.BAMBOO_MOSAIC_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
 | 123 | `minecraft:bamboo_slab` | `new ItemStack(ModBlocks.WOOD_SLAB.get(), 1, 4)` | EFR backport equivalent |  |
-| 124 | `minecraft:bamboo_mosaic_slab` | `Omitted` | missing | Not backported |
+| 124 | `minecraft:bamboo_mosaic_slab` | `new ItemStack(ModBlocks.BAMBOO_MOSAIC_SLAB.get())` | EFR backport equivalent | Automatically resolved |
 | 125 | `minecraft:bamboo_fence` | `new ItemStack(ModBlocks.WOOD_FENCE.get(), 1, 4)` | EFR backport equivalent |  |
 | 126 | `minecraft:bamboo_fence_gate` | `new ItemStack(ModBlocks.BAMBOO_FENCE_GATE.get())` | EFR backport equivalent |  |
 | 127 | `minecraft:bamboo_door` | `new ItemStack(ModBlocks.BAMBOO_DOOR.get())` | EFR backport equivalent |  |
@@ -163,8 +163,8 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 155 | `minecraft:warped_pressure_plate` | `new ItemStack(ModBlocks.WARPED_PRESSURE_PLATE.get())` | EFR backport equivalent |  |
 | 156 | `minecraft:warped_button` | `new ItemStack(ModBlocks.WARPED_BUTTON.get())` | EFR backport equivalent |  |
 | 157 | `minecraft:stone` | `new ItemStack(Blocks.stone, 1, 0)` | exact legacy equivalent |  |
-| 158 | `minecraft:stone_stairs` | `Omitted` | missing | Not backported |
-| 159 | `minecraft:stone_slab` | `Omitted` | missing | Not backported |
+| 158 | `minecraft:stone_stairs` | `new ItemStack(ModBlocks.STONE_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 159 | `minecraft:stone_slab` | `new ItemStack(ModBlocks.STONE_SLAB.get())` | EFR backport equivalent | Automatically resolved |
 | 160 | `minecraft:stone_pressure_plate` | `Omitted` | missing | Not backported |
 | 161 | `minecraft:stone_button` | `Omitted` | missing | Not backported |
 | 162 | `minecraft:cobblestone` | `new ItemStack(Blocks.cobblestone)` | exact legacy equivalent |  |
@@ -181,77 +181,77 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 173 | `minecraft:cracked_stone_bricks` | `new ItemStack(Blocks.stonebrick, 1, 2)` | exact legacy equivalent |  |
 | 174 | `minecraft:stone_brick_stairs` | `Omitted` | missing | Not backported |
 | 175 | `minecraft:stone_brick_slab` | `Omitted` | missing | Not backported |
-| 176 | `minecraft:stone_brick_wall` | `Omitted` | missing | Not backported |
+| 176 | `minecraft:stone_brick_wall` | `new ItemStack(ModBlocks.STONE_WALL.get(), 1, 0)` | EFR backport equivalent | Automatically resolved |
 | 177 | `minecraft:chiseled_stone_bricks` | `new ItemStack(Blocks.stonebrick, 1, 3)` | exact legacy equivalent |  |
 | 178 | `minecraft:mossy_stone_bricks` | `new ItemStack(Blocks.stonebrick, 1, 1)` | exact legacy equivalent |  |
 | 179 | `minecraft:mossy_stone_brick_stairs` | `new ItemStack(ModBlocks.MOSSY_STONE_BRICK_STAIRS.get())` | EFR backport equivalent |  |
 | 180 | `minecraft:mossy_stone_brick_slab` | `Omitted` | missing | Not backported |
-| 181 | `minecraft:mossy_stone_brick_wall` | `Omitted` | missing | Not backported |
+| 181 | `minecraft:mossy_stone_brick_wall` | `new ItemStack(ModBlocks.STONE_WALL.get(), 1, 1)` | EFR backport equivalent | Automatically resolved |
 | 182 | `minecraft:granite` | `new ItemStack(ModBlocks.STONE.get(), 1, 1)` | EFR backport equivalent |  |
-| 183 | `minecraft:granite_stairs` | `Omitted` | missing | Not backported |
-| 184 | `minecraft:granite_slab` | `Omitted` | missing | Not backported |
-| 185 | `minecraft:granite_wall` | `Omitted` | missing | Not backported |
+| 183 | `minecraft:granite_stairs` | `new ItemStack(ModBlocks.GRANITE_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 184 | `minecraft:granite_slab` | `new ItemStack(ModBlocks.STONE_SLAB_2.get(), 1, 0)` | EFR backport equivalent | Automatically resolved |
+| 185 | `minecraft:granite_wall` | `new ItemStack(ModBlocks.STONE_WALL_2.get(), 1, 0)` | EFR backport equivalent | Automatically resolved |
 | 186 | `minecraft:polished_granite` | `new ItemStack(ModBlocks.STONE.get(), 1, 2)` | EFR backport equivalent |  |
-| 187 | `minecraft:polished_granite_stairs` | `Omitted` | missing | Not backported |
-| 188 | `minecraft:polished_granite_slab` | `Omitted` | missing | Not backported |
+| 187 | `minecraft:polished_granite_stairs` | `new ItemStack(ModBlocks.POLISHED_GRANITE_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 188 | `minecraft:polished_granite_slab` | `new ItemStack(ModBlocks.STONE_SLAB_2.get(), 1, 1)` | EFR backport equivalent | Automatically resolved |
 | 189 | `minecraft:diorite` | `new ItemStack(ModBlocks.STONE.get(), 1, 3)` | EFR backport equivalent |  |
-| 190 | `minecraft:diorite_stairs` | `Omitted` | missing | Not backported |
-| 191 | `minecraft:diorite_slab` | `Omitted` | missing | Not backported |
-| 192 | `minecraft:diorite_wall` | `Omitted` | missing | Not backported |
+| 190 | `minecraft:diorite_stairs` | `new ItemStack(ModBlocks.DIORITE_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 191 | `minecraft:diorite_slab` | `new ItemStack(ModBlocks.STONE_SLAB_2.get(), 1, 2)` | EFR backport equivalent | Automatically resolved |
+| 192 | `minecraft:diorite_wall` | `new ItemStack(ModBlocks.STONE_WALL_2.get(), 1, 1)` | EFR backport equivalent | Automatically resolved |
 | 193 | `minecraft:polished_diorite` | `new ItemStack(ModBlocks.STONE.get(), 1, 4)` | EFR backport equivalent |  |
-| 194 | `minecraft:polished_diorite_stairs` | `Omitted` | missing | Not backported |
-| 195 | `minecraft:polished_diorite_slab` | `Omitted` | missing | Not backported |
+| 194 | `minecraft:polished_diorite_stairs` | `new ItemStack(ModBlocks.POLISHED_DIORITE_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 195 | `minecraft:polished_diorite_slab` | `new ItemStack(ModBlocks.STONE_SLAB_2.get(), 1, 3)` | EFR backport equivalent | Automatically resolved |
 | 196 | `minecraft:andesite` | `new ItemStack(ModBlocks.STONE.get(), 1, 5)` | EFR backport equivalent |  |
-| 197 | `minecraft:andesite_stairs` | `Omitted` | missing | Not backported |
-| 198 | `minecraft:andesite_slab` | `Omitted` | missing | Not backported |
-| 199 | `minecraft:andesite_wall` | `Omitted` | missing | Not backported |
+| 197 | `minecraft:andesite_stairs` | `new ItemStack(ModBlocks.ANDESITE_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 198 | `minecraft:andesite_slab` | `new ItemStack(ModBlocks.STONE_SLAB_2.get(), 1, 4)` | EFR backport equivalent | Automatically resolved |
+| 199 | `minecraft:andesite_wall` | `new ItemStack(ModBlocks.STONE_WALL_2.get(), 1, 2)` | EFR backport equivalent | Automatically resolved |
 | 200 | `minecraft:polished_andesite` | `new ItemStack(ModBlocks.STONE.get(), 1, 6)` | EFR backport equivalent |  |
-| 201 | `minecraft:polished_andesite_stairs` | `Omitted` | missing | Not backported |
-| 202 | `minecraft:polished_andesite_slab` | `Omitted` | missing | Not backported |
+| 201 | `minecraft:polished_andesite_stairs` | `new ItemStack(ModBlocks.POLISHED_ANDESITE_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 202 | `minecraft:polished_andesite_slab` | `new ItemStack(ModBlocks.STONE_SLAB_2.get(), 1, 5)` | EFR backport equivalent | Automatically resolved |
 | 203 | `minecraft:deepslate` | `new ItemStack(ModBlocks.DEEPSLATE.get())` | EFR backport equivalent |  |
 | 204 | `minecraft:cobbled_deepslate` | `new ItemStack(ModBlocks.COBBLED_DEEPSLATE.get())` | EFR backport equivalent |  |
-| 205 | `minecraft:cobbled_deepslate_stairs` | `Omitted` | missing | Not backported |
-| 206 | `minecraft:cobbled_deepslate_slab` | `Omitted` | missing | Not backported |
-| 207 | `minecraft:cobbled_deepslate_wall` | `Omitted` | missing | Not backported |
+| 205 | `minecraft:cobbled_deepslate_stairs` | `new ItemStack(ModBlocks.COBBLED_DEEPSLATE_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 206 | `minecraft:cobbled_deepslate_slab` | `new ItemStack(ModBlocks.DEEPSLATE_SLAB.get(), 1, 0)` | EFR backport equivalent | Automatically resolved |
+| 207 | `minecraft:cobbled_deepslate_wall` | `new ItemStack(ModBlocks.DEEPSLATE_WALL.get(), 1, 0)` | EFR backport equivalent | Automatically resolved |
 | 208 | `minecraft:chiseled_deepslate` | `Omitted` | missing | Not backported |
 | 209 | `minecraft:polished_deepslate` | `new ItemStack(ModBlocks.POLISHED_DEEPSLATE.get())` | EFR backport equivalent |  |
-| 210 | `minecraft:polished_deepslate_stairs` | `Omitted` | missing | Not backported |
-| 211 | `minecraft:polished_deepslate_slab` | `Omitted` | missing | Not backported |
-| 212 | `minecraft:polished_deepslate_wall` | `Omitted` | missing | Not backported |
+| 210 | `minecraft:polished_deepslate_stairs` | `new ItemStack(ModBlocks.POLISHED_DEEPSLATE_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 211 | `minecraft:polished_deepslate_slab` | `new ItemStack(ModBlocks.DEEPSLATE_SLAB.get(), 1, 1)` | EFR backport equivalent | Automatically resolved |
+| 212 | `minecraft:polished_deepslate_wall` | `new ItemStack(ModBlocks.DEEPSLATE_WALL.get(), 1, 1)` | EFR backport equivalent | Automatically resolved |
 | 213 | `minecraft:deepslate_bricks` | `new ItemStack(ModBlocks.DEEPSLATE_BRICKS.get(), 1, 0)` | EFR backport equivalent |  |
 | 214 | `minecraft:cracked_deepslate_bricks` | `new ItemStack(ModBlocks.DEEPSLATE_BRICKS.get(), 1, 1)` | EFR backport equivalent |  |
-| 215 | `minecraft:deepslate_brick_stairs` | `Omitted` | missing | Not backported |
-| 216 | `minecraft:deepslate_brick_slab` | `Omitted` | missing | Not backported |
-| 217 | `minecraft:deepslate_brick_wall` | `Omitted` | missing | Not backported |
+| 215 | `minecraft:deepslate_brick_stairs` | `new ItemStack(ModBlocks.DEEPSLATE_BRICK_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 216 | `minecraft:deepslate_brick_slab` | `new ItemStack(ModBlocks.DEEPSLATE_BRICK_SLAB.get())` | EFR backport equivalent | Automatically resolved |
+| 217 | `minecraft:deepslate_brick_wall` | `new ItemStack(ModBlocks.DEEPSLATE_BRICK_WALL.get())` | EFR backport equivalent | Automatically resolved |
 | 218 | `minecraft:deepslate_tiles` | `new ItemStack(ModBlocks.DEEPSLATE_BRICKS.get(), 1, 2)` | EFR backport equivalent |  |
 | 219 | `minecraft:cracked_deepslate_tiles` | `new ItemStack(ModBlocks.DEEPSLATE_BRICKS.get(), 1, 3)` | EFR backport equivalent |  |
-| 220 | `minecraft:deepslate_tile_stairs` | `Omitted` | missing | Not backported |
-| 221 | `minecraft:deepslate_tile_slab` | `Omitted` | missing | Not backported |
+| 220 | `minecraft:deepslate_tile_stairs` | `new ItemStack(ModBlocks.DEEPSLATE_TILE_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 221 | `minecraft:deepslate_tile_slab` | `new ItemStack(ModBlocks.DEEPSLATE_BRICK_SLAB.get(), 1, 1)` | EFR backport equivalent | Automatically resolved |
 | 222 | `minecraft:deepslate_tile_wall` | `Omitted` | missing | Not backported |
 | 223 | `minecraft:reinforced_deepslate` | `Omitted` | missing | Not backported |
 | 224 | `minecraft:tuff` | `new ItemStack(ModBlocks.TUFF.get())` | EFR backport equivalent |  |
-| 225 | `minecraft:tuff_stairs` | `Omitted` | missing | Not backported |
-| 226 | `minecraft:tuff_slab` | `Omitted` | missing | Not backported |
-| 227 | `minecraft:tuff_wall` | `Omitted` | missing | Not backported |
+| 225 | `minecraft:tuff_stairs` | `new ItemStack(ModBlocks.TUFF_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 226 | `minecraft:tuff_slab` | `new ItemStack(ModBlocks.TUFF_SLAB.get())` | EFR backport equivalent | Automatically resolved |
+| 227 | `minecraft:tuff_wall` | `new ItemStack(ModBlocks.TUFF_WALL.get())` | EFR backport equivalent | Automatically resolved |
 | 228 | `minecraft:chiseled_tuff` | `Omitted` | missing | Not backported |
 | 229 | `minecraft:polished_tuff` | `Omitted` | missing | Not backported |
-| 230 | `minecraft:polished_tuff_stairs` | `Omitted` | missing | Not backported |
+| 230 | `minecraft:polished_tuff_stairs` | `new ItemStack(ModBlocks.POLISHED_TUFF_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
 | 231 | `minecraft:polished_tuff_slab` | `Omitted` | missing | Not backported |
 | 232 | `minecraft:polished_tuff_wall` | `Omitted` | missing | Not backported |
 | 233 | `minecraft:tuff_bricks` | `Omitted` | missing | Not backported |
-| 234 | `minecraft:tuff_brick_stairs` | `Omitted` | missing | Not backported |
+| 234 | `minecraft:tuff_brick_stairs` | `new ItemStack(ModBlocks.TUFF_BRICK_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
 | 235 | `minecraft:tuff_brick_slab` | `Omitted` | missing | Not backported |
 | 236 | `minecraft:tuff_brick_wall` | `Omitted` | missing | Not backported |
 | 237 | `minecraft:chiseled_tuff_bricks` | `Omitted` | missing | Not backported |
 | 238 | `minecraft:bricks` | `Omitted` | missing | Not backported |
 | 239 | `minecraft:brick_stairs` | `Omitted` | missing | Not backported |
 | 240 | `minecraft:brick_slab` | `Omitted` | missing | Not backported |
-| 241 | `minecraft:brick_wall` | `Omitted` | missing | Not backported |
+| 241 | `minecraft:brick_wall` | `new ItemStack(ModBlocks.STONE_WALL.get(), 1, 3)` | EFR backport equivalent | Automatically resolved |
 | 242 | `minecraft:packed_mud` | `new ItemStack(ModBlocks.PACKED_MUD.get())` | EFR backport equivalent |  |
 | 243 | `minecraft:mud_bricks` | `Omitted` | missing | Not backported |
-| 244 | `minecraft:mud_brick_stairs` | `Omitted` | missing | Not backported |
-| 245 | `minecraft:mud_brick_slab` | `Omitted` | missing | Not backported |
-| 246 | `minecraft:mud_brick_wall` | `Omitted` | missing | Not backported |
+| 244 | `minecraft:mud_brick_stairs` | `new ItemStack(ModBlocks.MUD_BRICK_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 245 | `minecraft:mud_brick_slab` | `new ItemStack(ModBlocks.MUD_BRICK_SLAB.get())` | EFR backport equivalent | Automatically resolved |
+| 246 | `minecraft:mud_brick_wall` | `new ItemStack(ModBlocks.MUD_BRICK_WALL.get())` | EFR backport equivalent | Automatically resolved |
 | 247 | `minecraft:resin_bricks` | `Omitted` | missing | Not backported |
 | 248 | `minecraft:resin_brick_stairs` | `Omitted` | missing | Not backported |
 | 249 | `minecraft:resin_brick_slab` | `Omitted` | missing | Not backported |
@@ -260,80 +260,80 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 252 | `minecraft:sandstone` | `new ItemStack(Blocks.sandstone, 1, 0)` | exact legacy equivalent |  |
 | 253 | `minecraft:sandstone_stairs` | `Omitted` | missing | Not backported |
 | 254 | `minecraft:sandstone_slab` | `Omitted` | missing | Not backported |
-| 255 | `minecraft:sandstone_wall` | `Omitted` | missing | Not backported |
+| 255 | `minecraft:sandstone_wall` | `new ItemStack(ModBlocks.STONE_WALL.get(), 1, 2)` | EFR backport equivalent | Automatically resolved |
 | 256 | `minecraft:chiseled_sandstone` | `new ItemStack(Blocks.sandstone, 1, 1)` | exact legacy equivalent |  |
 | 257 | `minecraft:smooth_sandstone` | `new ItemStack(ModBlocks.SMOOTH_SANDSTONE.get())` | EFR backport equivalent |  |
-| 258 | `minecraft:smooth_sandstone_stairs` | `Omitted` | missing | Not backported |
-| 259 | `minecraft:smooth_sandstone_slab` | `Omitted` | missing | Not backported |
+| 258 | `minecraft:smooth_sandstone_stairs` | `new ItemStack(ModBlocks.SMOOTH_SANDSTONE_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 259 | `minecraft:smooth_sandstone_slab` | `new ItemStack(ModBlocks.SMOOTH_SANDSTONE_SLAB.get())` | EFR backport equivalent | Automatically resolved |
 | 260 | `minecraft:cut_sandstone` | `new ItemStack(Blocks.sandstone, 1, 2)` | exact legacy equivalent |  |
 | 261 | `minecraft:cut_standstone_slab` | `Omitted` | missing | Not backported |
 | 262 | `minecraft:red_sandstone` | `new ItemStack(ModBlocks.RED_SANDSTONE.get(), 1, 0)` | EFR backport equivalent |  |
 | 263 | `minecraft:red_sandstone_stairs` | `new ItemStack(ModBlocks.RED_SANDSTONE_STAIRS.get())` | EFR backport equivalent |  |
-| 264 | `minecraft:red_sandstone_slab` | `Omitted` | missing | Not backported |
-| 265 | `minecraft:red_sandstone_wall` | `Omitted` | missing | Not backported |
+| 264 | `minecraft:red_sandstone_slab` | `new ItemStack(ModBlocks.RED_SANDSTONE_SLAB.get())` | EFR backport equivalent | Automatically resolved |
+| 265 | `minecraft:red_sandstone_wall` | `new ItemStack(ModBlocks.RED_SANDSTONE_WALL.get())` | EFR backport equivalent | Automatically resolved |
 | 266 | `minecraft:chiseled_red_sandstone` | `new ItemStack(ModBlocks.RED_SANDSTONE.get(), 1, 1)` | EFR backport equivalent |  |
 | 267 | `minecraft:smooth_red_sandstone` | `new ItemStack(ModBlocks.SMOOTH_RED_SANDSTONE.get())` | EFR backport equivalent |  |
-| 268 | `minecraft:smooth_red_sandstone_stairs` | `Omitted` | missing | Not backported |
-| 269 | `minecraft:smooth_red_sandstone_slab` | `Omitted` | missing | Not backported |
+| 268 | `minecraft:smooth_red_sandstone_stairs` | `new ItemStack(ModBlocks.SMOOTH_RED_SANDSTONE_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 269 | `minecraft:smooth_red_sandstone_slab` | `new ItemStack(ModBlocks.SMOOTH_RED_SANDSTONE_SLAB.get())` | EFR backport equivalent | Automatically resolved |
 | 270 | `minecraft:cut_red_sandstone` | `new ItemStack(ModBlocks.RED_SANDSTONE.get(), 1, 2)` | EFR backport equivalent |  |
 | 271 | `minecraft:cut_red_sandstone_slab` | `Omitted` | missing | Not backported |
 | 272 | `minecraft:sea_lantern` | `new ItemStack(ModBlocks.SEA_LANTERN.get())` | EFR backport equivalent |  |
 | 273 | `minecraft:prismarine` | `new ItemStack(ModBlocks.PRISMARINE_BLOCK.get(), 1, 0)` | EFR backport equivalent |  |
-| 274 | `minecraft:prismarine_stairs` | `Omitted` | missing | Not backported |
-| 275 | `minecraft:prismarine_slab` | `Omitted` | missing | Not backported |
-| 276 | `minecraft:prismarine_wall` | `Omitted` | missing | Not backported |
+| 274 | `minecraft:prismarine_stairs` | `new ItemStack(ModBlocks.PRISMARINE_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 275 | `minecraft:prismarine_slab` | `new ItemStack(ModBlocks.PRISMARINE_SLAB.get())` | EFR backport equivalent | Automatically resolved |
+| 276 | `minecraft:prismarine_wall` | `new ItemStack(ModBlocks.PRISMARINE_WALL.get())` | EFR backport equivalent | Automatically resolved |
 | 277 | `minecraft:prismarine_bricks` | `new ItemStack(ModBlocks.PRISMARINE_BLOCK.get(), 1, 1)` | EFR backport equivalent |  |
-| 278 | `minecraft:prismarine_brick_stairs` | `Omitted` | missing | Not backported |
+| 278 | `minecraft:prismarine_brick_stairs` | `new ItemStack(ModBlocks.PRISMARINE_STAIRS_BRICK.get())` | EFR backport equivalent | Automatically resolved |
 | 279 | `minecraft:prismarine_brick_slab` | `Omitted` | missing | Not backported |
 | 280 | `minecraft:dark_prismarine` | `new ItemStack(ModBlocks.PRISMARINE_BLOCK.get(), 1, 2)` | EFR backport equivalent |  |
-| 281 | `minecraft:dark_prismarine_stairs` | `Omitted` | missing | Not backported |
+| 281 | `minecraft:dark_prismarine_stairs` | `new ItemStack(ModBlocks.PRISMARINE_STAIRS_DARK.get())` | EFR backport equivalent | Automatically resolved |
 | 282 | `minecraft:dark_prismarine_slab` | `Omitted` | missing | Not backported |
 | 283 | `minecraft:netherrack` | `new ItemStack(Blocks.netherrack)` | exact legacy equivalent |  |
 | 284 | `minecraft:nether_bricks` | `Omitted` | missing | Not backported |
 | 285 | `minecraft:cracked_nether_bricks` | `Omitted` | missing | Not backported |
 | 286 | `minecraft:nether_brick_stairs` | `Omitted` | missing | Not backported |
 | 287 | `minecraft:nether_brick_slab` | `Omitted` | missing | Not backported |
-| 288 | `minecraft:nether_brick_wall` | `Omitted` | missing | Not backported |
+| 288 | `minecraft:nether_brick_wall` | `new ItemStack(ModBlocks.NETHER_BRICK_WALL.get())` | EFR backport equivalent | Automatically resolved |
 | 289 | `minecraft:nether_brick_fence` | `Omitted` | missing | Not backported |
 | 290 | `minecraft:chiseled_nether_bricks` | `Omitted` | missing | Not backported |
-| 291 | `minecraft:red_nether_bricks` | `Omitted` | missing | Not backported |
-| 292 | `minecraft:red_nether_brick_stairs` | `Omitted` | missing | Not backported |
-| 293 | `minecraft:red_nether_brick_slab` | `Omitted` | missing | Not backported |
-| 294 | `minecraft:red_nether_brick_wall` | `Omitted` | missing | Not backported |
+| 291 | `minecraft:red_nether_bricks` | `new ItemStack(ModBlocks.RED_NETHERBRICK.get())` | EFR backport equivalent | Automatically resolved |
+| 292 | `minecraft:red_nether_brick_stairs` | `new ItemStack(ModBlocks.RED_NETHERBRICK_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 293 | `minecraft:red_nether_brick_slab` | `new ItemStack(ModBlocks.RED_NETHERBRICK_SLAB.get())` | EFR backport equivalent | Automatically resolved |
+| 294 | `minecraft:red_nether_brick_wall` | `new ItemStack(ModBlocks.RED_NETHER_BRICK_WALL.get())` | EFR backport equivalent | Automatically resolved |
 | 295 | `minecraft:basalt` | `new ItemStack(ModBlocks.BASALT.get())` | EFR backport equivalent |  |
 | 296 | `minecraft:smooth_basalt` | `new ItemStack(ModBlocks.SMOOTH_BASALT.get())` | EFR backport equivalent |  |
 | 297 | `minecraft:polished_basalt` | `Omitted` | missing | Not backported |
 | 298 | `minecraft:blackstone` | `new ItemStack(ModBlocks.BLACKSTONE.get(), 1, 0)` | EFR backport equivalent |  |
-| 299 | `minecraft:gilded_blackstone` | `Omitted` | missing | Not backported |
-| 300 | `minecraft:blackstone_stairs` | `Omitted` | missing | Not backported |
-| 301 | `minecraft:blackstone_slab` | `Omitted` | missing | Not backported |
-| 302 | `minecraft:blackstone_wall` | `Omitted` | missing | Not backported |
+| 299 | `minecraft:gilded_blackstone` | `new ItemStack(ModBlocks.GILDED_BLACKSTONE.get())` | EFR backport equivalent | Automatically resolved |
+| 300 | `minecraft:blackstone_stairs` | `new ItemStack(ModBlocks.BLACKSTONE_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 301 | `minecraft:blackstone_slab` | `new ItemStack(ModBlocks.BLACKSTONE_SLAB.get())` | EFR backport equivalent | Automatically resolved |
+| 302 | `minecraft:blackstone_wall` | `new ItemStack(ModBlocks.BLACKSTONE_WALL.get())` | EFR backport equivalent | Automatically resolved |
 | 303 | `minecraft:chiseled_polished_blackstone` | `Omitted` | missing | Not backported |
 | 304 | `minecraft:polished_blackstone` | `Omitted` | missing | Not backported |
-| 305 | `minecraft:polished_blackstone_stairs` | `Omitted` | missing | Not backported |
+| 305 | `minecraft:polished_blackstone_stairs` | `new ItemStack(ModBlocks.POLISHED_BLACKSTONE_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
 | 306 | `minecraft:polished_blackstone_slab` | `Omitted` | missing | Not backported |
 | 307 | `minecraft:polished_blackstone_wall` | `Omitted` | missing | Not backported |
-| 308 | `minecraft:polished_blackstone_pressure_plate` | `Omitted` | missing | Not backported |
-| 309 | `minecraft:polished_blackstone_button` | `Omitted` | missing | Not backported |
+| 308 | `minecraft:polished_blackstone_pressure_plate` | `new ItemStack(ModBlocks.POLISHED_BLACKSTONE_PRESSURE_PLATE.get())` | EFR backport equivalent | Automatically resolved |
+| 309 | `minecraft:polished_blackstone_button` | `new ItemStack(ModBlocks.POLISHED_BLACKSTONE_BUTTON.get())` | EFR backport equivalent | Automatically resolved |
 | 310 | `minecraft:polished_blackstone_bricks` | `Omitted` | missing | Not backported |
 | 311 | `minecraft:cracked_polished_blackstone_bricks` | `Omitted` | missing | Not backported |
-| 312 | `minecraft:polished_blackstone_brick_stairs` | `Omitted` | missing | Not backported |
+| 312 | `minecraft:polished_blackstone_brick_stairs` | `new ItemStack(ModBlocks.POLISHED_BLACKSTONE_BRICK_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
 | 313 | `minecraft:polished_blackstone_brick_slab` | `Omitted` | missing | Not backported |
 | 314 | `minecraft:polished_blackstone_brick_wall` | `Omitted` | missing | Not backported |
 | 315 | `minecraft:end_stone` | `new ItemStack(Blocks.end_stone)` | exact legacy equivalent |  |
-| 316 | `minecraft:end_stone_bricks` | `Omitted` | missing | Not backported |
-| 317 | `minecraft:end_stone_brick_stairs` | `Omitted` | missing | Not backported |
-| 318 | `minecraft:end_stone_brick_slab` | `Omitted` | missing | Not backported |
-| 319 | `minecraft:end_stone_brick_wall` | `Omitted` | missing | Not backported |
-| 320 | `minecraft:purpur_block` | `Omitted` | missing | Not backported |
-| 321 | `minecraft:purpur_pillar` | `Omitted` | missing | Not backported |
-| 322 | `minecraft:purpur_stairs` | `Omitted` | missing | Not backported |
-| 323 | `minecraft:purpur_slab` | `Omitted` | missing | Not backported |
+| 316 | `minecraft:end_stone_bricks` | `new ItemStack(ModBlocks.END_BRICKS.get())` | EFR backport equivalent | Automatically resolved |
+| 317 | `minecraft:end_stone_brick_stairs` | `new ItemStack(ModBlocks.END_BRICK_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 318 | `minecraft:end_stone_brick_slab` | `new ItemStack(ModBlocks.END_BRICK_SLAB.get())` | EFR backport equivalent | Automatically resolved |
+| 319 | `minecraft:end_stone_brick_wall` | `new ItemStack(ModBlocks.END_BRICK_WALL.get())` | EFR backport equivalent | Automatically resolved |
+| 320 | `minecraft:purpur_block` | `new ItemStack(ModBlocks.PURPUR_BLOCK.get())` | EFR backport equivalent | Automatically resolved |
+| 321 | `minecraft:purpur_pillar` | `new ItemStack(ModBlocks.PURPUR_PILLAR.get())` | EFR backport equivalent | Automatically resolved |
+| 322 | `minecraft:purpur_stairs` | `new ItemStack(ModBlocks.PURPUR_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 323 | `minecraft:purpur_slab` | `new ItemStack(ModBlocks.PURPUR_SLAB.get())` | EFR backport equivalent | Automatically resolved |
 | 324 | `minecraft:coal_block` | `new ItemStack(Blocks.coal_block)` | exact legacy equivalent |  |
 | 325 | `minecraft:iron_block` | `new ItemStack(Blocks.iron_block)` | exact legacy equivalent |  |
 | 326 | `minecraft:iron_bars` | `new ItemStack(Blocks.iron_bars)` | exact legacy equivalent |  |
-| 327 | `minecraft:iron_door` | `Omitted` | missing | Not backported |
-| 328 | `minecraft:iron_trapdoor` | `Omitted` | missing | Not backported |
+| 327 | `minecraft:iron_door` | `new ItemStack(Items.iron_door)` | EFR backport equivalent | Automatically resolved |
+| 328 | `minecraft:iron_trapdoor` | `new ItemStack(ModBlocks.IRON_TRAPDOOR.get())` | EFR backport equivalent | Automatically resolved |
 | 329 | `minecraft:heavy_weighted_pressure_plate` | `Omitted` | missing | Not backported |
 | 330 | `minecraft:chain` | `new ItemStack(ModBlocks.CHAIN.get())` | EFR backport equivalent |  |
 | 331 | `minecraft:gold_block` | `new ItemStack(Blocks.gold_block)` | exact legacy equivalent |  |
@@ -347,88 +347,88 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 339 | `minecraft:quartz_stairs` | `Omitted` | missing | Not backported |
 | 340 | `minecraft:quartz_slab` | `Omitted` | missing | Not backported |
 | 341 | `minecraft:chiseled_quartz_block` | `new ItemStack(Blocks.quartz_block, 1, 1)` | exact legacy equivalent |  |
-| 342 | `minecraft:quartz_bricks` | `Omitted` | missing | Not backported |
+| 342 | `minecraft:quartz_bricks` | `new ItemStack(ModBlocks.QUARTZ_BRICKS.get())` | EFR backport equivalent | Automatically resolved |
 | 343 | `minecraft:quartz_pillar` | `new ItemStack(Blocks.quartz_block, 1, 2)` | exact legacy equivalent |  |
 | 344 | `minecraft:smooth_quartz` | `new ItemStack(ModBlocks.SMOOTH_QUARTZ.get())` | EFR backport equivalent |  |
-| 345 | `minecraft:smooth_quartz_stairs` | `Omitted` | missing | Not backported |
-| 346 | `minecraft:smooth_quartz_slab` | `Omitted` | missing | Not backported |
+| 345 | `minecraft:smooth_quartz_stairs` | `new ItemStack(ModBlocks.SMOOTH_QUARTZ_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 346 | `minecraft:smooth_quartz_slab` | `new ItemStack(ModBlocks.SMOOTH_QUARTZ_SLAB.get())` | EFR backport equivalent | Automatically resolved |
 | 347 | `minecraft:amethyst_block` | `new ItemStack(ModBlocks.AMETHYST_BLOCK.get())` | EFR backport equivalent |  |
 | 348 | `minecraft:copper_block` | `new ItemStack(ModBlocks.COPPER_BLOCK.get(), 1, 0)` | EFR backport equivalent |  |
-| 349 | `minecraft:chiseled_copper` | `Omitted` | missing | Not backported |
-| 350 | `minecraft:copper_grate` | `Omitted` | missing | Not backported |
+| 349 | `minecraft:chiseled_copper` | `new ItemStack(ModBlocks.CHISELED_COPPER.get())` | EFR backport equivalent | Automatically resolved |
+| 350 | `minecraft:copper_grate` | `new ItemStack(ModBlocks.COPPER_GRATE.get())` | EFR backport equivalent | Automatically resolved |
 | 351 | `minecraft:cut_copper` | `Omitted` | missing | Not backported |
-| 352 | `minecraft:cut_copper_stairs` | `Omitted` | missing | Not backported |
-| 353 | `minecraft:cut_copper_slab` | `Omitted` | missing | Not backported |
-| 354 | `minecraft:copper_door` | `Omitted` | missing | Not backported |
-| 355 | `minecraft:copper_trapdoor` | `Omitted` | missing | Not backported |
-| 356 | `minecraft:copper_bulb` | `Omitted` | missing | Not backported |
+| 352 | `minecraft:cut_copper_stairs` | `new ItemStack(ModBlocks.CUT_COPPER_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
+| 353 | `minecraft:cut_copper_slab` | `new ItemStack(ModBlocks.CUT_COPPER_SLAB.get())` | EFR backport equivalent | Automatically resolved |
+| 354 | `minecraft:copper_door` | `new ItemStack(ModBlocks.COPPER_DOOR.get())` | EFR backport equivalent | Automatically resolved |
+| 355 | `minecraft:copper_trapdoor` | `new ItemStack(ModBlocks.COPPER_TRAPDOOR.get())` | EFR backport equivalent | Automatically resolved |
+| 356 | `minecraft:copper_bulb` | `new ItemStack(ModBlocks.COPPER_BULB.get())` | EFR backport equivalent | Automatically resolved |
 | 357 | `minecraft:exposed_copper` | `new ItemStack(ModBlocks.COPPER_BLOCK.get(), 1, 1)` | EFR backport equivalent |  |
 | 358 | `minecraft:exposed_chiseled_copper` | `Omitted` | missing | Not backported |
 | 359 | `minecraft:exposed_copper_grate` | `Omitted` | missing | Not backported |
 | 360 | `minecraft:exposed_cut_copper` | `Omitted` | missing | Not backported |
-| 361 | `minecraft:exposed_cut_copper_stairs` | `Omitted` | missing | Not backported |
+| 361 | `minecraft:exposed_cut_copper_stairs` | `new ItemStack(ModBlocks.EXPOSED_CUT_COPPER_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
 | 362 | `minecraft:exposed_cut_copper_slab` | `Omitted` | missing | Not backported |
-| 363 | `minecraft:exposed_copper_door` | `Omitted` | missing | Not backported |
-| 364 | `minecraft:exposed_copper_trapdoor` | `Omitted` | missing | Not backported |
+| 363 | `minecraft:exposed_copper_door` | `new ItemStack(ModBlocks.EXPOSED_COPPER_DOOR.get())` | EFR backport equivalent | Automatically resolved |
+| 364 | `minecraft:exposed_copper_trapdoor` | `new ItemStack(ModBlocks.EXPOSED_COPPER_TRAPDOOR.get())` | EFR backport equivalent | Automatically resolved |
 | 365 | `minecraft:exposed_copper_bulb` | `Omitted` | missing | Not backported |
 | 366 | `minecraft:weathered_copper` | `new ItemStack(ModBlocks.COPPER_BLOCK.get(), 1, 2)` | EFR backport equivalent |  |
 | 367 | `minecraft:weathered_chiseled_copper` | `Omitted` | missing | Not backported |
 | 368 | `minecraft:weathered_copper_grate` | `Omitted` | missing | Not backported |
 | 369 | `minecraft:weathered_cut_copper` | `Omitted` | missing | Not backported |
-| 370 | `minecraft:weathered_cut_copper_stairs` | `Omitted` | missing | Not backported |
+| 370 | `minecraft:weathered_cut_copper_stairs` | `new ItemStack(ModBlocks.WEATHERED_CUT_COPPER_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
 | 371 | `minecraft:weathered_cut_copper_slab` | `Omitted` | missing | Not backported |
-| 372 | `minecraft:weathered_copper_door` | `Omitted` | missing | Not backported |
-| 373 | `minecraft:weathered_copper_trapdoor` | `Omitted` | missing | Not backported |
+| 372 | `minecraft:weathered_copper_door` | `new ItemStack(ModBlocks.WEATHERED_COPPER_DOOR.get())` | EFR backport equivalent | Automatically resolved |
+| 373 | `minecraft:weathered_copper_trapdoor` | `new ItemStack(ModBlocks.WEATHERED_COPPER_TRAPDOOR.get())` | EFR backport equivalent | Automatically resolved |
 | 374 | `minecraft:weathered_copper_bulb` | `Omitted` | missing | Not backported |
 | 375 | `minecraft:oxidized_copper` | `new ItemStack(ModBlocks.COPPER_BLOCK.get(), 1, 3)` | EFR backport equivalent |  |
 | 376 | `minecraft:oxidized_chiseled_copper` | `Omitted` | missing | Not backported |
 | 377 | `minecraft:oxidized_copper_grate` | `Omitted` | missing | Not backported |
 | 378 | `minecraft:oxidized_cut_copper` | `Omitted` | missing | Not backported |
-| 379 | `minecraft:oxidized_cut_copper_stairs` | `Omitted` | missing | Not backported |
+| 379 | `minecraft:oxidized_cut_copper_stairs` | `new ItemStack(ModBlocks.OXIDIZED_CUT_COPPER_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
 | 380 | `minecraft:oxidized_cut_copper_slab` | `Omitted` | missing | Not backported |
-| 381 | `minecraft:oxidized_copper_door` | `Omitted` | missing | Not backported |
-| 382 | `minecraft:oxidized_copper_trapdoor` | `Omitted` | missing | Not backported |
+| 381 | `minecraft:oxidized_copper_door` | `new ItemStack(ModBlocks.OXIDIZED_COPPER_DOOR.get())` | EFR backport equivalent | Automatically resolved |
+| 382 | `minecraft:oxidized_copper_trapdoor` | `new ItemStack(ModBlocks.OXIDIZED_COPPER_TRAPDOOR.get())` | EFR backport equivalent | Automatically resolved |
 | 383 | `minecraft:oxidized_copper_bulb` | `Omitted` | missing | Not backported |
 | 384 | `minecraft:waxed_copper_block` | `new ItemStack(ModBlocks.COPPER_BLOCK.get(), 1, 8)` | EFR backport equivalent |  |
 | 385 | `minecraft:waxed_chiseled_copper` | `Omitted` | missing | Not backported |
 | 386 | `minecraft:waxed_copper_grate` | `Omitted` | missing | Not backported |
 | 387 | `minecraft:waxed_cut_copper` | `Omitted` | missing | Not backported |
-| 388 | `minecraft:waxed_cut_copper_stairs` | `Omitted` | missing | Not backported |
+| 388 | `minecraft:waxed_cut_copper_stairs` | `new ItemStack(ModBlocks.WAXED_CUT_COPPER_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
 | 389 | `minecraft:waxed_cut_copper_slab` | `Omitted` | missing | Not backported |
-| 390 | `minecraft:waxed_copper_door` | `Omitted` | missing | Not backported |
-| 391 | `minecraft:waxed_copper_trapdoor` | `Omitted` | missing | Not backported |
+| 390 | `minecraft:waxed_copper_door` | `new ItemStack(ModBlocks.WAXED_COPPER_DOOR.get())` | EFR backport equivalent | Automatically resolved |
+| 391 | `minecraft:waxed_copper_trapdoor` | `new ItemStack(ModBlocks.WAXED_COPPER_TRAPDOOR.get())` | EFR backport equivalent | Automatically resolved |
 | 392 | `minecraft:waxed_copper_bulb` | `Omitted` | missing | Not backported |
 | 393 | `minecraft:waxed_exposed_copper` | `new ItemStack(ModBlocks.COPPER_BLOCK.get(), 1, 9)` | EFR backport equivalent |  |
 | 394 | `minecraft:waxed_exposed_chiseled_copper` | `Omitted` | missing | Not backported |
 | 395 | `minecraft:waxed_exposed_copper_grate` | `Omitted` | missing | Not backported |
 | 396 | `minecraft:waxed_exposed_cut_copper` | `Omitted` | missing | Not backported |
-| 397 | `minecraft:waxed_exposed_cut_copper_stairs` | `Omitted` | missing | Not backported |
+| 397 | `minecraft:waxed_exposed_cut_copper_stairs` | `new ItemStack(ModBlocks.WAXED_EXPOSED_CUT_COPPER_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
 | 398 | `minecraft:waxed_exposed_cut_copper_slab` | `Omitted` | missing | Not backported |
-| 399 | `minecraft:waxed_exposed_copper_door` | `Omitted` | missing | Not backported |
-| 400 | `minecraft:waxed_exposed_copper_trapdoor` | `Omitted` | missing | Not backported |
+| 399 | `minecraft:waxed_exposed_copper_door` | `new ItemStack(ModBlocks.WAXED_EXPOSED_COPPER_DOOR.get())` | EFR backport equivalent | Automatically resolved |
+| 400 | `minecraft:waxed_exposed_copper_trapdoor` | `new ItemStack(ModBlocks.WAXED_EXPOSED_COPPER_TRAPDOOR.get())` | EFR backport equivalent | Automatically resolved |
 | 401 | `minecraft:waxed_exposed_copper_bulb` | `Omitted` | missing | Not backported |
 | 402 | `minecraft:waxed_weathered_copper` | `new ItemStack(ModBlocks.COPPER_BLOCK.get(), 1, 10)` | EFR backport equivalent |  |
 | 403 | `minecraft:waxed_weathered_chiseled_copper` | `Omitted` | missing | Not backported |
 | 404 | `minecraft:waxed_weathered_copper_grate` | `Omitted` | missing | Not backported |
 | 405 | `minecraft:waxed_weathered_cut_copper` | `Omitted` | missing | Not backported |
-| 406 | `minecraft:waxed_weathered_cut_copper_stairs` | `Omitted` | missing | Not backported |
+| 406 | `minecraft:waxed_weathered_cut_copper_stairs` | `new ItemStack(ModBlocks.WAXED_WEATHERED_CUT_COPPER_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
 | 407 | `minecraft:waxed_weathered_cut_copper_slab` | `Omitted` | missing | Not backported |
-| 408 | `minecraft:waxed_weathered_copper_door` | `Omitted` | missing | Not backported |
-| 409 | `minecraft:waxed_weathered_copper_trapdoor` | `Omitted` | missing | Not backported |
+| 408 | `minecraft:waxed_weathered_copper_door` | `new ItemStack(ModBlocks.WAXED_WEATHERED_COPPER_DOOR.get())` | EFR backport equivalent | Automatically resolved |
+| 409 | `minecraft:waxed_weathered_copper_trapdoor` | `new ItemStack(ModBlocks.WAXED_WEATHERED_COPPER_TRAPDOOR.get())` | EFR backport equivalent | Automatically resolved |
 | 410 | `minecraft:waxed_weathered_copper_bulb` | `Omitted` | missing | Not backported |
 | 411 | `minecraft:waxed_oxidized_copper` | `new ItemStack(ModBlocks.COPPER_BLOCK.get(), 1, 11)` | EFR backport equivalent |  |
 | 412 | `minecraft:waxed_oxidized_chiseled_copper` | `Omitted` | missing | Not backported |
 | 413 | `minecraft:waxed_oxidized_copper_grate` | `Omitted` | missing | Not backported |
 | 414 | `minecraft:waxed_oxidized_cut_copper` | `Omitted` | missing | Not backported |
-| 415 | `minecraft:waxed_oxidized_cut_copper_stairs` | `Omitted` | missing | Not backported |
+| 415 | `minecraft:waxed_oxidized_cut_copper_stairs` | `new ItemStack(ModBlocks.WAXED_OXIDIZED_CUT_COPPER_STAIRS.get())` | EFR backport equivalent | Automatically resolved |
 | 416 | `minecraft:waxed_oxidized_cut_copper_slab` | `Omitted` | missing | Not backported |
-| 417 | `minecraft:waxed_oxidized_copper_door` | `Omitted` | missing | Not backported |
-| 418 | `minecraft:waxed_oxidized_copper_trapdoor` | `Omitted` | missing | Not backported |
+| 417 | `minecraft:waxed_oxidized_copper_door` | `new ItemStack(ModBlocks.WAXED_OXIDIZED_COPPER_DOOR.get())` | EFR backport equivalent | Automatically resolved |
+| 418 | `minecraft:waxed_oxidized_copper_trapdoor` | `new ItemStack(ModBlocks.WAXED_OXIDIZED_COPPER_TRAPDOOR.get())` | EFR backport equivalent | Automatically resolved |
 | 419 | `minecraft:waxed_oxidized_copper_bulb` | `Omitted` | missing | Not backported |
 
 ## Tab: Colored Blocks (`itemGroup.coloredBlocks`)
 | Index | 1.21.4 Registry ID | 1.7.10 / EFR Constructor | Status | Notes |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 0 | `minecraft:white_wool` | `new ItemStack(Blocks.wool, 1, 0)` | exact legacy equivalent |  |
 | 1 | `minecraft:light_gray_wool` | `new ItemStack(Blocks.wool, 1, 8)` | exact legacy equivalent |  |
 | 2 | `minecraft:gray_wool` | `new ItemStack(Blocks.wool, 1, 7)` | exact legacy equivalent |  |
@@ -561,7 +561,7 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 129 | `minecraft:purple_stained_glass_pane` | `new ItemStack(Blocks.stained_glass_pane, 1, 10)` | exact legacy equivalent |  |
 | 130 | `minecraft:magenta_stained_glass_pane` | `new ItemStack(Blocks.stained_glass_pane, 1, 2)` | exact legacy equivalent |  |
 | 131 | `minecraft:pink_stained_glass_pane` | `new ItemStack(Blocks.stained_glass_pane, 1, 6)` | exact legacy equivalent |  |
-| 132 | `minecraft:shulker_box` | `Omitted` | missing | Not backported |
+| 132 | `minecraft:shulker_box` | `new ItemStack(ModBlocks.SHULKER_BOX.get())` | EFR backport equivalent | Automatically resolved |
 | 133 | `minecraft:white_shulker_box` | `Omitted` | missing | Not backported |
 | 134 | `minecraft:light_gray_shulker_box` | `Omitted` | missing | Not backported |
 | 135 | `minecraft:gray_shulker_box` | `Omitted` | missing | Not backported |
@@ -630,7 +630,7 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 
 ## Tab: Natural Blocks (`itemGroup.natural`)
 | Index | 1.21.4 Registry ID | 1.7.10 / EFR Constructor | Status | Notes |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 0 | `minecraft:grass_block` | `new ItemStack(Blocks.grass)` | exact legacy equivalent |  |
 | 1 | `minecraft:podzol` | `new ItemStack(Blocks.dirt, 1, 2)` | exact legacy equivalent |  |
 | 2 | `minecraft:mycelium` | `new ItemStack(Blocks.mycelium)` | exact legacy equivalent |  |
@@ -792,8 +792,8 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 158 | `minecraft:pitcher_plant` | `Omitted` | missing | Not backported |
 | 159 | `minecraft:big_dripleaf` | `Omitted` | missing | Not backported |
 | 160 | `minecraft:small_dripleaf` | `Omitted` | missing | Not backported |
-| 161 | `minecraft:chorus_plant` | `Omitted` | missing | Not backported |
-| 162 | `minecraft:chorus_flower` | `Omitted` | missing | Not backported |
+| 161 | `minecraft:chorus_plant` | `new ItemStack(ModBlocks.CHORUS_PLANT.get())` | EFR backport equivalent | Automatically resolved |
+| 162 | `minecraft:chorus_flower` | `new ItemStack(ModBlocks.CHORUS_FLOWER.get())` | EFR backport equivalent | Automatically resolved |
 | 163 | `minecraft:glow_lichen` | `Omitted` | missing | Not backported |
 | 164 | `minecraft:hanging_roots` | `Omitted` | missing | Not backported |
 | 165 | `minecraft:frogspawn` | `Omitted` | missing | Not backported |
@@ -808,7 +808,7 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 174 | `minecraft:pitcher_pod` | `Omitted` | missing | Not backported |
 | 175 | `minecraft:glow_berries` | `Omitted` | missing | Not backported |
 | 176 | `minecraft:sweet_berries` | `new ItemStack(ModItems.SWEET_BERRIES.get())` | EFR backport equivalent |  |
-| 177 | `minecraft:nether_wart` | `Omitted` | missing | Not backported |
+| 177 | `minecraft:nether_wart` | `new ItemStack(ModBlocks.NETHER_WART.get())` | EFR backport equivalent | Automatically resolved |
 | 178 | `minecraft:lily_pad` | `Omitted` | missing | Not backported |
 | 179 | `minecraft:seagrass` | `Omitted` | missing | Not backported |
 | 180 | `minecraft:sea_pickle` | `Omitted` | missing | Not backported |
@@ -844,7 +844,7 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 210 | `minecraft:dead_bubble_coral_fan` | `Omitted` | missing | Not backported |
 | 211 | `minecraft:dead_fire_coral_fan` | `Omitted` | missing | Not backported |
 | 212 | `minecraft:dead_horn_coral_fan` | `Omitted` | missing | Not backported |
-| 213 | `minecraft:sponge` | `Omitted` | missing | Not backported |
+| 213 | `minecraft:sponge` | `new ItemStack(ModBlocks.SPONGE.get())` | EFR backport equivalent | Automatically resolved |
 | 214 | `minecraft:wet_sponge` | `Omitted` | missing | Not backported |
 | 215 | `minecraft:melon` | `new ItemStack(Blocks.melon_block)` | exact legacy equivalent |  |
 | 216 | `minecraft:pumpkin` | `new ItemStack(Blocks.pumpkin)` | exact legacy equivalent |  |
@@ -859,9 +859,9 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 225 | `minecraft:ochre_froglight` | `Omitted` | missing | Not backported |
 | 226 | `minecraft:verdant_froglight` | `Omitted` | missing | Not backported |
 | 227 | `minecraft:pearlescent_froglight` | `Omitted` | missing | Not backported |
-| 228 | `minecraft:sculk` | `Omitted` | missing | Not backported |
+| 228 | `minecraft:sculk` | `new ItemStack(ModBlocks.SCULK.get())` | EFR backport equivalent | Automatically resolved |
 | 229 | `minecraft:sculk_vein` | `Omitted` | missing | Not backported |
-| 230 | `minecraft:sculk_catalyst` | `Omitted` | missing | Not backported |
+| 230 | `minecraft:sculk_catalyst` | `new ItemStack(ModBlocks.SCULK_CATALYST.get())` | EFR backport equivalent | Automatically resolved |
 | 231 | `minecraft:sculk_shrieker` | `Omitted` | missing | Not backported |
 | 232 | `minecraft:sculk_sensor` | `Omitted` | missing | Not backported |
 | 233 | `minecraft:cobweb` | `new ItemStack(Blocks.web)` | exact legacy equivalent |  |
@@ -869,17 +869,17 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 
 ## Tab: Functional Blocks (`itemGroup.functional`)
 | Index | 1.21.4 Registry ID | 1.7.10 / EFR Constructor | Status | Notes |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 0 | `minecraft:torch` | `new ItemStack(Blocks.torch)` | exact legacy equivalent |  |
 | 1 | `minecraft:soul_torch` | `new ItemStack(ModBlocks.SOUL_TORCH.get())` | EFR backport equivalent |  |
 | 2 | `minecraft:redstone_torch` | `new ItemStack(Blocks.redstone_torch)` | exact legacy equivalent |  |
 | 3 | `minecraft:lantern` | `new ItemStack(ModBlocks.LANTERN.get())` | EFR backport equivalent |  |
 | 4 | `minecraft:soul_lantern` | `new ItemStack(ModBlocks.SOUL_LANTERN.get())` | EFR backport equivalent |  |
 | 5 | `minecraft:chain` | `new ItemStack(ModBlocks.CHAIN.get())` | EFR backport equivalent |  |
-| 6 | `minecraft:end_rod` | `Omitted` | missing | Not backported |
+| 6 | `minecraft:end_rod` | `new ItemStack(ModBlocks.END_ROD.get())` | EFR backport equivalent | Automatically resolved |
 | 7 | `minecraft:sea_lantern` | `new ItemStack(ModBlocks.SEA_LANTERN.get())` | EFR backport equivalent |  |
 | 8 | `minecraft:redstone_lamp` | `new ItemStack(Blocks.redstone_lamp)` | exact legacy equivalent |  |
-| 9 | `minecraft:copper_bulb` | `Omitted` | missing | Not backported |
+| 9 | `minecraft:copper_bulb` | `new ItemStack(ModBlocks.COPPER_BULB.get())` | EFR backport equivalent | Automatically resolved |
 | 10 | `minecraft:exposed_copper_bulb` | `Omitted` | missing | Not backported |
 | 11 | `minecraft:weathered_copper_bulb` | `Omitted` | missing | Not backported |
 | 12 | `minecraft:oxidized_copper_bulb` | `Omitted` | missing | Not backported |
@@ -914,7 +914,7 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 41 | `minecraft:note_block` | `new ItemStack(Blocks.noteblock)` | exact legacy equivalent |  |
 | 42 | `minecraft:jukebox` | `new ItemStack(Blocks.jukebox)` | exact legacy equivalent |  |
 | 43 | `minecraft:enchanting_table` | `new ItemStack(ModBlocks.ENCHANTMENT_TABLE.get())` | EFR backport equivalent |  |
-| 44 | `minecraft:end_crystal` | `Omitted` | missing | Not backported |
+| 44 | `minecraft:end_crystal` | `new ItemStack(ModItems.END_CRYSTAL.get())` | EFR backport equivalent | Automatically resolved |
 | 45 | `minecraft:brewing_stand` | `new ItemStack(ModBlocks.BREWING_STAND.get())` | EFR backport equivalent |  |
 | 46 | `minecraft:cauldron` | `Omitted` | missing | Not backported |
 | 47 | `minecraft:bell` | `Omitted` | missing | Not backported |
@@ -927,10 +927,10 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 54 | `minecraft:beehive` | `new ItemStack(ModBlocks.BEEHIVE.get())` | EFR backport equivalent |  |
 | 55 | `minecraft:suspicious_sand` | `Omitted` | missing | Not backported |
 | 56 | `minecraft:suspicious_gravel` | `Omitted` | missing | Not backported |
-| 57 | `minecraft:lightning_rod` | `Omitted` | missing | Not backported |
+| 57 | `minecraft:lightning_rod` | `new ItemStack(ModBlocks.LIGHTNING_ROD.get())` | EFR backport equivalent | Automatically resolved |
 | 58 | `minecraft:flower_pot` | `Omitted` | missing | Not backported |
 | 59 | `minecraft:decorated_pot` | `Omitted` | missing | Not backported |
-| 60 | `minecraft:armor_stand` | `Omitted` | missing | Not backported |
+| 60 | `minecraft:armor_stand` | `new ItemStack(ModItems.WOODEN_ARMORSTAND.get())` | EFR backport equivalent | Automatically resolved |
 | 61 | `minecraft:item_frame` | `Omitted` | missing | Not backported |
 | 62 | `minecraft:glow_item_frame` | `Omitted` | missing | Not backported |
 | 63 | `minecraft:painting` | `Omitted` | missing | Not backported |
@@ -938,34 +938,34 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 65 | `minecraft:chiseled_bookshelf` | `Omitted` | missing | Not backported |
 | 66 | `minecraft:lectern` | `Omitted` | missing | Not backported |
 | 67 | `minecraft:tinted_glass` | `new ItemStack(ModBlocks.TINTED_GLASS.get())` | EFR backport equivalent |  |
-| 68 | `minecraft:oak_sign` | `Omitted` | missing | Not backported |
+| 68 | `minecraft:oak_sign` | `new ItemStack(Items.sign)` | EFR backport equivalent | Automatically resolved |
 | 69 | `minecraft:oak_hanging_sign` | `Omitted` | missing | Not backported |
-| 70 | `minecraft:spruce_sign` | `Omitted` | missing | Not backported |
+| 70 | `minecraft:spruce_sign` | `new ItemStack(ModItems.ITEM_SIGN_SPRUCE.get())` | EFR backport equivalent | Automatically resolved |
 | 71 | `minecraft:spruce_hanging_sign` | `Omitted` | missing | Not backported |
-| 72 | `minecraft:birch_sign` | `Omitted` | missing | Not backported |
+| 72 | `minecraft:birch_sign` | `new ItemStack(ModItems.ITEM_SIGN_BIRCH.get())` | EFR backport equivalent | Automatically resolved |
 | 73 | `minecraft:birch_hanging_sign` | `Omitted` | missing | Not backported |
-| 74 | `minecraft:jungle_sign` | `Omitted` | missing | Not backported |
+| 74 | `minecraft:jungle_sign` | `new ItemStack(ModItems.ITEM_SIGN_JUNGLE.get())` | EFR backport equivalent | Automatically resolved |
 | 75 | `minecraft:jungle_hanging_sign` | `Omitted` | missing | Not backported |
-| 76 | `minecraft:acacia_sign` | `Omitted` | missing | Not backported |
+| 76 | `minecraft:acacia_sign` | `new ItemStack(ModItems.ITEM_SIGN_ACACIA.get())` | EFR backport equivalent | Automatically resolved |
 | 77 | `minecraft:acacia_hanging_sign` | `Omitted` | missing | Not backported |
-| 78 | `minecraft:dark_oak_sign` | `Omitted` | missing | Not backported |
+| 78 | `minecraft:dark_oak_sign` | `new ItemStack(ModItems.ITEM_SIGN_DARK_OAK.get())` | EFR backport equivalent | Automatically resolved |
 | 79 | `minecraft:dark_oak_hanging_sign` | `Omitted` | missing | Not backported |
-| 80 | `minecraft:mangrove_sign` | `Omitted` | missing | Not backported |
+| 80 | `minecraft:mangrove_sign` | `new ItemStack(ModBlocks.MANGROVE_SIGN.get())` | EFR backport equivalent | Automatically resolved |
 | 81 | `minecraft:mangrove_hanging_sign` | `Omitted` | missing | Not backported |
-| 82 | `minecraft:cherry_sign` | `Omitted` | missing | Not backported |
+| 82 | `minecraft:cherry_sign` | `new ItemStack(ModBlocks.CHERRY_SIGN.get())` | EFR backport equivalent | Automatically resolved |
 | 83 | `minecraft:cherry_hanging_sign` | `Omitted` | missing | Not backported |
 | 84 | `minecraft:pale_oak_sign` | `Omitted` | missing | Not backported |
 | 85 | `minecraft:pale_oak_hanging_sign` | `Omitted` | missing | Not backported |
-| 86 | `minecraft:bamboo_sign` | `Omitted` | missing | Not backported |
+| 86 | `minecraft:bamboo_sign` | `new ItemStack(ModBlocks.BAMBOO_SIGN.get())` | EFR backport equivalent | Automatically resolved |
 | 87 | `minecraft:bamboo_hanging_sign` | `Omitted` | missing | Not backported |
-| 88 | `minecraft:crimson_sign` | `Omitted` | missing | Not backported |
+| 88 | `minecraft:crimson_sign` | `new ItemStack(ModBlocks.CRIMSON_SIGN.get())` | EFR backport equivalent | Automatically resolved |
 | 89 | `minecraft:crimson_hanging_sign` | `Omitted` | missing | Not backported |
-| 90 | `minecraft:warped_sign` | `Omitted` | missing | Not backported |
+| 90 | `minecraft:warped_sign` | `new ItemStack(ModBlocks.WARPED_SIGN.get())` | EFR backport equivalent | Automatically resolved |
 | 91 | `minecraft:warped_hanging_sign` | `Omitted` | missing | Not backported |
 | 92 | `minecraft:chest` | `new ItemStack(Blocks.chest)` | exact legacy equivalent |  |
 | 93 | `minecraft:barrel` | `new ItemStack(ModBlocks.BARREL.get())` | EFR backport equivalent |  |
 | 94 | `minecraft:ender_chest` | `new ItemStack(Blocks.ender_chest)` | exact legacy equivalent |  |
-| 95 | `minecraft:shulker_box` | `Omitted` | missing | Not backported |
+| 95 | `minecraft:shulker_box` | `new ItemStack(ModBlocks.SHULKER_BOX.get())` | EFR backport equivalent | Automatically resolved |
 | 96 | `minecraft:white_shulker_box` | `Omitted` | missing | Not backported |
 | 97 | `minecraft:light_gray_shulker_box` | `Omitted` | missing | Not backported |
 | 98 | `minecraft:gray_shulker_box` | `Omitted` | missing | Not backported |
@@ -1053,7 +1053,7 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 
 ## Tab: Redstone Blocks (`itemGroup.redstone`)
 | Index | 1.21.4 Registry ID | 1.7.10 / EFR Constructor | Status | Notes |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 0 | `minecraft:redstone` | `new ItemStack(Items.redstone)` | exact legacy equivalent |  |
 | 1 | `minecraft:redstone_torch` | `new ItemStack(Blocks.redstone_torch)` | exact legacy equivalent |  |
 | 2 | `minecraft:redstone_block` | `new ItemStack(Blocks.redstone_block)` | exact legacy equivalent |  |
@@ -1080,7 +1080,7 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 23 | `minecraft:string` | `new ItemStack(Items.string)` | exact legacy equivalent | Not backported |
 | 24 | `minecraft:lectern` | `Omitted` | missing | Not backported |
 | 25 | `minecraft:daylight_detector` | `new ItemStack(Blocks.daylight_detector)` | exact legacy equivalent |  |
-| 26 | `minecraft:lightning_rod` | `Omitted` | missing | Not backported |
+| 26 | `minecraft:lightning_rod` | `new ItemStack(ModBlocks.LIGHTNING_ROD.get())` | EFR backport equivalent | Automatically resolved |
 | 27 | `minecraft:piston` | `new ItemStack(Blocks.piston)` | exact legacy equivalent |  |
 | 28 | `minecraft:sticky_piston` | `new ItemStack(Blocks.sticky_piston)` | exact legacy equivalent |  |
 | 29 | `minecraft:slime_block` | `Omitted` | missing | Not backported |
@@ -1100,32 +1100,32 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 43 | `minecraft:note_block` | `new ItemStack(Blocks.noteblock)` | exact legacy equivalent |  |
 | 44 | `minecraft:composter` | `new ItemStack(ModBlocks.COMPOSTER.get())` | EFR backport equivalent |  |
 | 45 | `minecraft:cauldron` | `Omitted` | missing | Not backported |
-| 46 | `minecraft:rail` | `Omitted` | missing | Not backported |
-| 47 | `minecraft:powered_rail` | `Omitted` | missing | Not backported |
-| 48 | `minecraft:detector_rail` | `Omitted` | missing | Not backported |
-| 49 | `minecraft:activator_rail` | `Omitted` | missing | Not backported |
-| 50 | `minecraft:minecart` | `Omitted` | missing | Not backported |
-| 51 | `minecraft:hopper_minecart` | `Omitted` | missing | Not backported |
-| 52 | `minecraft:chest_minecart` | `Omitted` | missing | Not backported |
-| 53 | `minecraft:furnace_minecart` | `Omitted` | missing | Not backported |
-| 54 | `minecraft:tnt_minecart` | `Omitted` | missing | Not backported |
-| 55 | `minecraft:oak_chest_boat` | `Omitted` | missing | Not backported |
-| 56 | `minecraft:bamboo_chest_raft` | `Omitted` | missing | Not backported |
+| 46 | `minecraft:rail` | `new ItemStack(Blocks.rail)` | EFR backport equivalent | Automatically resolved |
+| 47 | `minecraft:powered_rail` | `new ItemStack(Blocks.golden_rail)` | EFR backport equivalent | Automatically resolved |
+| 48 | `minecraft:detector_rail` | `new ItemStack(Blocks.detector_rail)` | EFR backport equivalent | Automatically resolved |
+| 49 | `minecraft:activator_rail` | `new ItemStack(Blocks.activator_rail)` | EFR backport equivalent | Automatically resolved |
+| 50 | `minecraft:minecart` | `new ItemStack(Items.minecart)` | EFR backport equivalent | Automatically resolved |
+| 51 | `minecraft:hopper_minecart` | `new ItemStack(Items.hopper_minecart)` | EFR backport equivalent | Automatically resolved |
+| 52 | `minecraft:chest_minecart` | `new ItemStack(Items.chest_minecart)` | EFR backport equivalent | Automatically resolved |
+| 53 | `minecraft:furnace_minecart` | `new ItemStack(Items.furnace_minecart)` | EFR backport equivalent | Automatically resolved |
+| 54 | `minecraft:tnt_minecart` | `new ItemStack(Items.tnt_minecart)` | EFR backport equivalent | Automatically resolved |
+| 55 | `minecraft:oak_chest_boat` | `new ItemStack(ModItems.OAK_CHEST_BOAT.get())` | EFR backport equivalent | Automatically resolved |
+| 56 | `minecraft:bamboo_chest_raft` | `new ItemStack(ModItems.BAMBOO_CHEST_RAFT.get())` | EFR backport equivalent | Automatically resolved |
 | 57 | `minecraft:oak_door` | `new ItemStack(Items.wooden_door)` | exact legacy equivalent |  |
-| 58 | `minecraft:iron_door` | `Omitted` | missing | Not backported |
+| 58 | `minecraft:iron_door` | `new ItemStack(Items.iron_door)` | EFR backport equivalent | Automatically resolved |
 | 59 | `minecraft:oak_fence_gate` | `new ItemStack(Blocks.fence_gate)` | exact legacy equivalent |  |
 | 60 | `minecraft:oak_trapdoor` | `new ItemStack(Blocks.trapdoor)` | exact legacy equivalent |  |
-| 61 | `minecraft:iron_trapdoor` | `Omitted` | missing | Not backported |
+| 61 | `minecraft:iron_trapdoor` | `new ItemStack(ModBlocks.IRON_TRAPDOOR.get())` | EFR backport equivalent | Automatically resolved |
 | 62 | `minecraft:tnt` | `new ItemStack(Blocks.tnt)` | exact legacy equivalent |  |
 | 63 | `minecraft:redstone_lamp` | `new ItemStack(Blocks.redstone_lamp)` | exact legacy equivalent |  |
 | 64 | `minecraft:bell` | `Omitted` | missing | Not backported |
 | 65 | `minecraft:big_dripleaf` | `Omitted` | missing | Not backported |
-| 66 | `minecraft:armor_stand` | `Omitted` | missing | Not backported |
+| 66 | `minecraft:armor_stand` | `new ItemStack(ModItems.WOODEN_ARMORSTAND.get())` | EFR backport equivalent | Automatically resolved |
 | 67 | `minecraft:redstone_ore` | `new ItemStack(Blocks.redstone_ore)` | exact legacy equivalent |  |
 
 ## Tab: Tools & Utilities (`itemGroup.tools`)
 | Index | 1.21.4 Registry ID | 1.7.10 / EFR Constructor | Status | Notes |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 0 | `minecraft:wooden_shovel` | `new ItemStack(Items.wooden_shovel)` | exact legacy equivalent |  |
 | 1 | `minecraft:wooden_pickaxe` | `new ItemStack(Items.wooden_pickaxe)` | exact legacy equivalent |  |
 | 2 | `minecraft:wooden_axe` | `new ItemStack(Items.wooden_axe)` | exact legacy equivalent |  |
@@ -1163,7 +1163,7 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 34 | `minecraft:milk_bucket` | `new ItemStack(Items.milk_bucket)` | exact legacy equivalent |  |
 | 35 | `minecraft:fishing_rod` | `new ItemStack(Items.fishing_rod)` | exact legacy equivalent |  |
 | 36 | `minecraft:flint_and_steel` | `new ItemStack(Items.flint_and_steel)` | exact legacy equivalent |  |
-| 37 | `minecraft:fire_charge` | `Omitted` | missing | Not backported |
+| 37 | `minecraft:fire_charge` | `new ItemStack(Items.fire_charge)` | EFR backport equivalent | Automatically resolved |
 | 38 | `minecraft:bone_meal` | `new ItemStack(Items.dye, 1, 15)` | exact legacy equivalent |  |
 | 39 | `minecraft:shears` | `new ItemStack(Items.shears)` | exact legacy equivalent |  |
 | 40 | `minecraft:brush` | `Omitted` | missing | Not backported |
@@ -1190,67 +1190,67 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 61 | `minecraft:recovery_compass` | `Omitted` | missing | Not backported |
 | 62 | `minecraft:clock` | `new ItemStack(Items.clock)` | exact legacy equivalent |  |
 | 63 | `minecraft:spyglass` | `Omitted` | missing | Not backported |
-| 64 | `minecraft:map` | `Omitted` | missing | Not backported |
-| 65 | `minecraft:writable_book` | `Omitted` | missing | Not backported |
+| 64 | `minecraft:map` | `new ItemStack(Items.map)` | EFR backport equivalent | Automatically resolved |
+| 65 | `minecraft:writable_book` | `new ItemStack(Items.writable_book)` | EFR backport equivalent | Automatically resolved |
 | 66 | `minecraft:wind_charge` | `Omitted` | missing | Not backported |
 | 67 | `minecraft:ender_pearl` | `new ItemStack(Items.ender_pearl)` | exact legacy equivalent |  |
 | 68 | `minecraft:ender_eye` | `new ItemStack(Items.ender_eye)` | exact legacy equivalent |  |
 | 69 | `minecraft:elytra` | `new ItemStack(ModItems.ELYTRA.get())` | EFR backport equivalent |  |
 | 70 | `minecraft:saddle` | `new ItemStack(Items.saddle)` | exact legacy equivalent |  |
-| 71 | `minecraft:carrot_on_a_stick` | `Omitted` | missing | Not backported |
+| 71 | `minecraft:carrot_on_a_stick` | `new ItemStack(Items.carrot_on_a_stick)` | EFR backport equivalent | Automatically resolved |
 | 72 | `minecraft:warped_fungus_on_a_stick` | `Omitted` | missing | Not backported |
-| 73 | `minecraft:oak_boat` | `Omitted` | missing | Not backported |
-| 74 | `minecraft:oak_chest_boat` | `Omitted` | missing | Not backported |
-| 75 | `minecraft:spruce_boat` | `Omitted` | missing | Not backported |
-| 76 | `minecraft:spruce_chest_boat` | `Omitted` | missing | Not backported |
-| 77 | `minecraft:birch_boat` | `Omitted` | missing | Not backported |
-| 78 | `minecraft:birch_chest_boat` | `Omitted` | missing | Not backported |
-| 79 | `minecraft:jungle_boat` | `Omitted` | missing | Not backported |
-| 80 | `minecraft:jungle_chest_boat` | `Omitted` | missing | Not backported |
-| 81 | `minecraft:acacia_boat` | `Omitted` | missing | Not backported |
-| 82 | `minecraft:acacia_chest_boat` | `Omitted` | missing | Not backported |
-| 83 | `minecraft:dark_oak_boat` | `Omitted` | missing | Not backported |
-| 84 | `minecraft:dark_oak_chest_boat` | `Omitted` | missing | Not backported |
-| 85 | `minecraft:mangrove_boat` | `Omitted` | missing | Not backported |
-| 86 | `minecraft:mangrove_chest_boat` | `Omitted` | missing | Not backported |
-| 87 | `minecraft:cherry_boat` | `Omitted` | missing | Not backported |
-| 88 | `minecraft:cherry_chest_boat` | `Omitted` | missing | Not backported |
+| 73 | `minecraft:oak_boat` | `new ItemStack(Items.boat)` | EFR backport equivalent | Automatically resolved |
+| 74 | `minecraft:oak_chest_boat` | `new ItemStack(ModItems.OAK_CHEST_BOAT.get())` | EFR backport equivalent | Automatically resolved |
+| 75 | `minecraft:spruce_boat` | `new ItemStack(ModItems.SPRUCE_BOAT.get())` | EFR backport equivalent | Automatically resolved |
+| 76 | `minecraft:spruce_chest_boat` | `new ItemStack(ModItems.SPRUCE_CHEST_BOAT.get())` | EFR backport equivalent | Automatically resolved |
+| 77 | `minecraft:birch_boat` | `new ItemStack(ModItems.BIRCH_BOAT.get())` | EFR backport equivalent | Automatically resolved |
+| 78 | `minecraft:birch_chest_boat` | `new ItemStack(ModItems.BIRCH_CHEST_BOAT.get())` | EFR backport equivalent | Automatically resolved |
+| 79 | `minecraft:jungle_boat` | `new ItemStack(ModItems.JUNGLE_BOAT.get())` | EFR backport equivalent | Automatically resolved |
+| 80 | `minecraft:jungle_chest_boat` | `new ItemStack(ModItems.JUNGLE_CHEST_BOAT.get())` | EFR backport equivalent | Automatically resolved |
+| 81 | `minecraft:acacia_boat` | `new ItemStack(ModItems.ACACIA_BOAT.get())` | EFR backport equivalent | Automatically resolved |
+| 82 | `minecraft:acacia_chest_boat` | `new ItemStack(ModItems.ACACIA_CHEST_BOAT.get())` | EFR backport equivalent | Automatically resolved |
+| 83 | `minecraft:dark_oak_boat` | `new ItemStack(ModItems.DARK_OAK_BOAT.get())` | EFR backport equivalent | Automatically resolved |
+| 84 | `minecraft:dark_oak_chest_boat` | `new ItemStack(ModItems.DARK_OAK_CHEST_BOAT.get())` | EFR backport equivalent | Automatically resolved |
+| 85 | `minecraft:mangrove_boat` | `new ItemStack(ModItems.MANGROVE_OAK_BOAT.get())` | EFR backport equivalent | Automatically resolved |
+| 86 | `minecraft:mangrove_chest_boat` | `new ItemStack(ModItems.MANGROVE_CHEST_BOAT.get())` | EFR backport equivalent | Automatically resolved |
+| 87 | `minecraft:cherry_boat` | `new ItemStack(ModItems.CHERRY_BOAT.get())` | EFR backport equivalent | Automatically resolved |
+| 88 | `minecraft:cherry_chest_boat` | `new ItemStack(ModItems.CHERRY_CHEST_BOAT.get())` | EFR backport equivalent | Automatically resolved |
 | 89 | `minecraft:pale_oak_boat` | `Omitted` | missing | Not backported |
 | 90 | `minecraft:pale_oak_chest_boat` | `Omitted` | missing | Not backported |
-| 91 | `minecraft:bamboo_raft` | `Omitted` | missing | Not backported |
-| 92 | `minecraft:bamboo_chest_raft` | `Omitted` | missing | Not backported |
-| 93 | `minecraft:rail` | `Omitted` | missing | Not backported |
-| 94 | `minecraft:powered_rail` | `Omitted` | missing | Not backported |
-| 95 | `minecraft:detector_rail` | `Omitted` | missing | Not backported |
-| 96 | `minecraft:activator_rail` | `Omitted` | missing | Not backported |
-| 97 | `minecraft:minecart` | `Omitted` | missing | Not backported |
-| 98 | `minecraft:hopper_minecart` | `Omitted` | missing | Not backported |
-| 99 | `minecraft:chest_minecart` | `Omitted` | missing | Not backported |
-| 100 | `minecraft:furnace_minecart` | `Omitted` | missing | Not backported |
-| 101 | `minecraft:tnt_minecart` | `Omitted` | missing | Not backported |
-| 102 | `minecraft:music_disc_13` | `Omitted` | missing | Not backported |
-| 103 | `minecraft:music_disc_cat` | `Omitted` | missing | Not backported |
-| 104 | `minecraft:music_disc_blocks` | `Omitted` | missing | Not backported |
-| 105 | `minecraft:music_disc_chirp` | `Omitted` | missing | Not backported |
-| 106 | `minecraft:music_disc_far` | `Omitted` | missing | Not backported |
-| 107 | `minecraft:music_disc_mall` | `Omitted` | missing | Not backported |
-| 108 | `minecraft:music_disc_mellohi` | `Omitted` | missing | Not backported |
-| 109 | `minecraft:music_disc_stal` | `Omitted` | missing | Not backported |
-| 110 | `minecraft:music_disc_strad` | `Omitted` | missing | Not backported |
-| 111 | `minecraft:music_disc_ward` | `Omitted` | missing | Not backported |
-| 112 | `minecraft:music_disc_11` | `Omitted` | missing | Not backported |
+| 91 | `minecraft:bamboo_raft` | `new ItemStack(ModItems.BAMBOO_RAFT.get())` | EFR backport equivalent | Automatically resolved |
+| 92 | `minecraft:bamboo_chest_raft` | `new ItemStack(ModItems.BAMBOO_CHEST_RAFT.get())` | EFR backport equivalent | Automatically resolved |
+| 93 | `minecraft:rail` | `new ItemStack(Blocks.rail)` | EFR backport equivalent | Automatically resolved |
+| 94 | `minecraft:powered_rail` | `new ItemStack(Blocks.golden_rail)` | EFR backport equivalent | Automatically resolved |
+| 95 | `minecraft:detector_rail` | `new ItemStack(Blocks.detector_rail)` | EFR backport equivalent | Automatically resolved |
+| 96 | `minecraft:activator_rail` | `new ItemStack(Blocks.activator_rail)` | EFR backport equivalent | Automatically resolved |
+| 97 | `minecraft:minecart` | `new ItemStack(Items.minecart)` | EFR backport equivalent | Automatically resolved |
+| 98 | `minecraft:hopper_minecart` | `new ItemStack(Items.hopper_minecart)` | EFR backport equivalent | Automatically resolved |
+| 99 | `minecraft:chest_minecart` | `new ItemStack(Items.chest_minecart)` | EFR backport equivalent | Automatically resolved |
+| 100 | `minecraft:furnace_minecart` | `new ItemStack(Items.furnace_minecart)` | EFR backport equivalent | Automatically resolved |
+| 101 | `minecraft:tnt_minecart` | `new ItemStack(Items.tnt_minecart)` | EFR backport equivalent | Automatically resolved |
+| 102 | `minecraft:music_disc_13` | `new ItemStack(Items.record_13)` | EFR backport equivalent | Automatically resolved |
+| 103 | `minecraft:music_disc_cat` | `new ItemStack(Items.record_cat)` | EFR backport equivalent | Automatically resolved |
+| 104 | `minecraft:music_disc_blocks` | `new ItemStack(Items.record_blocks)` | EFR backport equivalent | Automatically resolved |
+| 105 | `minecraft:music_disc_chirp` | `new ItemStack(Items.record_chirp)` | EFR backport equivalent | Automatically resolved |
+| 106 | `minecraft:music_disc_far` | `new ItemStack(Items.record_far)` | EFR backport equivalent | Automatically resolved |
+| 107 | `minecraft:music_disc_mall` | `new ItemStack(Items.record_mall)` | EFR backport equivalent | Automatically resolved |
+| 108 | `minecraft:music_disc_mellohi` | `new ItemStack(Items.record_mellohi)` | EFR backport equivalent | Automatically resolved |
+| 109 | `minecraft:music_disc_stal` | `new ItemStack(Items.record_stal)` | EFR backport equivalent | Automatically resolved |
+| 110 | `minecraft:music_disc_strad` | `new ItemStack(Items.record_strad)` | EFR backport equivalent | Automatically resolved |
+| 111 | `minecraft:music_disc_ward` | `new ItemStack(Items.record_ward)` | EFR backport equivalent | Automatically resolved |
+| 112 | `minecraft:music_disc_11` | `new ItemStack(Items.record_11)` | EFR backport equivalent | Automatically resolved |
 | 113 | `minecraft:music_disc_creator_music_box` | `Omitted` | missing | Not backported |
-| 114 | `minecraft:music_disc_wait` | `Omitted` | missing | Not backported |
+| 114 | `minecraft:music_disc_wait` | `new ItemStack(Items.record_wait)` | EFR backport equivalent | Automatically resolved |
 | 115 | `minecraft:music_disc_creator` | `Omitted` | missing | Not backported |
 | 116 | `minecraft:music_disc_precipice` | `Omitted` | missing | Not backported |
-| 117 | `minecraft:music_disc_otherside` | `Omitted` | missing | Not backported |
+| 117 | `minecraft:music_disc_otherside` | `new ItemStack(ModItems.OTHERSIDE_RECORD.get())` | EFR backport equivalent | Automatically resolved |
 | 118 | `minecraft:music_disc_relic` | `Omitted` | missing | Not backported |
 | 119 | `minecraft:music_disc_5` | `Omitted` | missing | Not backported |
-| 120 | `minecraft:music_disc_pigstep` | `Omitted` | missing | Not backported |
+| 120 | `minecraft:music_disc_pigstep` | `new ItemStack(ModItems.PIGSTEP_RECORD.get())` | EFR backport equivalent | Automatically resolved |
 
 ## Tab: Combat (`itemGroup.combat`)
 | Index | 1.21.4 Registry ID | 1.7.10 / EFR Constructor | Status | Notes |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 0 | `minecraft:wooden_sword` | `new ItemStack(Items.wooden_sword)` | exact legacy equivalent |  |
 | 1 | `minecraft:stone_sword` | `new ItemStack(Items.stone_sword)` | exact legacy equivalent |  |
 | 2 | `minecraft:iron_sword` | `new ItemStack(Items.iron_sword)` | exact legacy equivalent |  |
@@ -1292,13 +1292,13 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 38 | `minecraft:netherite_boots` | `new ItemStack(ModItems.NETHERITE_BOOTS.get())` | EFR backport equivalent |  |
 | 39 | `minecraft:turtle_helmet` | `Omitted` | missing | Not backported |
 | 40 | `minecraft:leather_horse_armor` | `Omitted` | missing | Not backported |
-| 41 | `minecraft:iron_horse_armor` | `Omitted` | missing | Not backported |
-| 42 | `minecraft:golden_horse_armor` | `Omitted` | missing | Not backported |
-| 43 | `minecraft:diamond_horse_armor` | `Omitted` | missing | Not backported |
+| 41 | `minecraft:iron_horse_armor` | `new ItemStack(Items.iron_horse_armor)` | EFR backport equivalent | Automatically resolved |
+| 42 | `minecraft:golden_horse_armor` | `new ItemStack(Items.golden_horse_armor)` | EFR backport equivalent | Automatically resolved |
+| 43 | `minecraft:diamond_horse_armor` | `new ItemStack(Items.diamond_horse_armor)` | EFR backport equivalent | Automatically resolved |
 | 44 | `minecraft:wolf_armor` | `Omitted` | missing | Not backported |
 | 45 | `minecraft:totem_of_undying` | `new ItemStack(ModItems.TOTEM_OF_UNDYING.get())` | EFR backport equivalent |  |
 | 46 | `minecraft:tnt` | `new ItemStack(Blocks.tnt)` | exact legacy equivalent |  |
-| 47 | `minecraft:end_crystal` | `Omitted` | missing | Not backported |
+| 47 | `minecraft:end_crystal` | `new ItemStack(ModItems.END_CRYSTAL.get())` | EFR backport equivalent | Automatically resolved |
 | 48 | `minecraft:snowball` | `new ItemStack(Items.snowball)` | exact legacy equivalent | Not backported |
 | 49 | `minecraft:egg` | `new ItemStack(Items.egg)` | exact legacy equivalent |  |
 | 50 | `minecraft:wind_charge` | `Omitted` | missing | Not backported |
@@ -1309,18 +1309,18 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 
 ## Tab: Food & Drinks (`itemGroup.foodAndDrink`)
 | Index | 1.21.4 Registry ID | 1.7.10 / EFR Constructor | Status | Notes |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 0 | `minecraft:apple` | `new ItemStack(Items.apple)` | exact legacy equivalent |  |
 | 1 | `minecraft:golden_apple` | `new ItemStack(Items.golden_apple, 1, 0)` | exact legacy equivalent |  |
 | 2 | `minecraft:enchanted_golden_apple` | `new ItemStack(Items.golden_apple, 1, 1)` | exact legacy equivalent |  |
 | 3 | `minecraft:melon_slice` | `new ItemStack(Items.melon)` | exact legacy equivalent |  |
 | 4 | `minecraft:sweet_berries` | `new ItemStack(ModItems.SWEET_BERRIES.get())` | EFR backport equivalent |  |
 | 5 | `minecraft:glow_berries` | `Omitted` | missing | Not backported |
-| 6 | `minecraft:chorus_fruit` | `Omitted` | missing | Not backported |
-| 7 | `minecraft:carrot` | `Omitted` | missing | Not backported |
+| 6 | `minecraft:chorus_fruit` | `new ItemStack(ModItems.CHORUS_FRUIT.get())` | EFR backport equivalent | Automatically resolved |
+| 7 | `minecraft:carrot` | `new ItemStack(Items.carrot)` | EFR backport equivalent | Automatically resolved |
 | 8 | `minecraft:golden_carrot` | `new ItemStack(Items.golden_carrot)` | exact legacy equivalent | Not backported |
-| 9 | `minecraft:potato` | `Omitted` | missing | Not backported |
-| 10 | `minecraft:baked_potato` | `Omitted` | missing | Not backported |
+| 9 | `minecraft:potato` | `new ItemStack(Items.potato)` | EFR backport equivalent | Automatically resolved |
+| 10 | `minecraft:baked_potato` | `new ItemStack(Items.baked_potato)` | EFR backport equivalent | Automatically resolved |
 | 11 | `minecraft:poisonous_potato` | `new ItemStack(Items.poisonous_potato)` | exact legacy equivalent |  |
 | 12 | `minecraft:beetroot` | `new ItemStack(ModItems.BEETROOT.get())` | EFR backport equivalent |  |
 | 13 | `minecraft:dried_kelp` | `Omitted` | missing | Not backported |
@@ -1334,15 +1334,15 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 21 | `minecraft:cooked_chicken` | `new ItemStack(Items.cooked_chicken)` | exact legacy equivalent |  |
 | 22 | `minecraft:rabbit` | `new ItemStack(ModItems.RABBIT_RAW.get())` | EFR backport equivalent |  |
 | 23 | `minecraft:cooked_rabbit` | `new ItemStack(ModItems.RABBIT_COOKED.get())` | EFR backport equivalent |  |
-| 24 | `minecraft:cod` | `Omitted` | missing | Not backported |
-| 25 | `minecraft:cooked_cod` | `Omitted` | missing | Not backported |
-| 26 | `minecraft:salmon` | `Omitted` | missing | Not backported |
-| 27 | `minecraft:cooked_salmon` | `Omitted` | missing | Not backported |
-| 28 | `minecraft:tropical_fish` | `Omitted` | missing | Not backported |
-| 29 | `minecraft:pufferfish` | `Omitted` | missing | Not backported |
+| 24 | `minecraft:cod` | `new ItemStack(Items.fish, 1, 0)` | EFR backport equivalent | Automatically resolved |
+| 25 | `minecraft:cooked_cod` | `new ItemStack(Items.cooked_fished, 1, 0)` | EFR backport equivalent | Automatically resolved |
+| 26 | `minecraft:salmon` | `new ItemStack(Items.fish, 1, 1)` | EFR backport equivalent | Automatically resolved |
+| 27 | `minecraft:cooked_salmon` | `new ItemStack(Items.cooked_fished, 1, 1)` | EFR backport equivalent | Automatically resolved |
+| 28 | `minecraft:tropical_fish` | `new ItemStack(Items.fish, 1, 2)` | EFR backport equivalent | Automatically resolved |
+| 29 | `minecraft:pufferfish` | `new ItemStack(Items.fish, 1, 3)` | EFR backport equivalent | Automatically resolved |
 | 30 | `minecraft:bread` | `new ItemStack(Items.bread)` | exact legacy equivalent |  |
 | 31 | `minecraft:cookie` | `new ItemStack(Items.cookie)` | exact legacy equivalent |  |
-| 32 | `minecraft:cake` | `Omitted` | missing | Not backported |
+| 32 | `minecraft:cake` | `new ItemStack(Items.cake)` | EFR backport equivalent | Automatically resolved |
 | 33 | `minecraft:pumpkin_pie` | `new ItemStack(Items.pumpkin_pie)` | exact legacy equivalent |  |
 | 34 | `minecraft:rotten_flesh` | `new ItemStack(Items.rotten_flesh)` | exact legacy equivalent |  |
 | 35 | `minecraft:spider_eye` | `new ItemStack(Items.spider_eye)` | exact legacy equivalent |  |
@@ -1354,7 +1354,7 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 
 ## Tab: Ingredients (`itemGroup.ingredients`)
 | Index | 1.21.4 Registry ID | 1.7.10 / EFR Constructor | Status | Notes |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 0 | `minecraft:coal` | `new ItemStack(Items.coal, 1, 0)` | exact legacy equivalent |  |
 | 1 | `minecraft:charcoal` | `new ItemStack(Items.coal, 1, 1)` | exact legacy equivalent |  |
 | 2 | `minecraft:raw_iron` | `new ItemStack(ModItems.RAW_ORE.get(), 1, 1)` | EFR backport equivalent |  |
@@ -1396,7 +1396,7 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 38 | `minecraft:prismarine_crystals` | `new ItemStack(ModItems.PRISMARINE_CRYSTALS.get())` | EFR backport equivalent | Not backported |
 | 39 | `minecraft:nautilus_shell` | `new ItemStack(ModItems.NAUTILUS_SHELL.get())` | EFR backport equivalent |  |
 | 40 | `minecraft:heart_of_the_sea` | `Omitted` | missing | Not backported |
-| 41 | `minecraft:fire_charge` | `Omitted` | missing | Not backported |
+| 41 | `minecraft:fire_charge` | `new ItemStack(Items.fire_charge)` | EFR backport equivalent | Automatically resolved |
 | 42 | `minecraft:blaze_rod` | `new ItemStack(Items.blaze_rod)` | exact legacy equivalent | Not backported |
 | 43 | `minecraft:breeze_rod` | `Omitted` | missing | Not backported |
 | 44 | `minecraft:heavy_core` | `Omitted` | missing | Not backported |
@@ -1423,15 +1423,15 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 65 | `minecraft:purple_dye` | `new ItemStack(Items.dye, 1, 5)` | exact legacy equivalent |  |
 | 66 | `minecraft:magenta_dye` | `new ItemStack(Items.dye, 1, 13)` | exact legacy equivalent |  |
 | 67 | `minecraft:pink_dye` | `new ItemStack(Items.dye, 1, 9)` | exact legacy equivalent |  |
-| 68 | `minecraft:bowl` | `Omitted` | missing | Not backported |
+| 68 | `minecraft:bowl` | `new ItemStack(Items.bowl)` | EFR backport equivalent | Automatically resolved |
 | 69 | `minecraft:brick` | `new ItemStack(Items.brick)` | exact legacy equivalent |  |
 | 70 | `minecraft:nether_brick` | `new ItemStack(Items.netherbrick)` | exact legacy equivalent |  |
 | 71 | `minecraft:resin_brick` | `Omitted` | missing | Not backported |
 | 72 | `minecraft:paper` | `new ItemStack(Items.paper)` | exact legacy equivalent |  |
 | 73 | `minecraft:book` | `new ItemStack(Items.book)` | exact legacy equivalent |  |
 | 74 | `minecraft:firework_star` | `new ItemStack(Items.fireworkCharge)` | exact legacy equivalent | Not backported |
-| 75 | `minecraft:glass_bottle` | `Omitted` | missing | Not backported |
-| 76 | `minecraft:nether_wart` | `Omitted` | missing | Not backported |
+| 75 | `minecraft:glass_bottle` | `new ItemStack(Items.glass_bottle)` | EFR backport equivalent | Automatically resolved |
+| 76 | `minecraft:nether_wart` | `new ItemStack(ModBlocks.NETHER_WART.get())` | EFR backport equivalent | Automatically resolved |
 | 77 | `minecraft:redstone` | `new ItemStack(Items.redstone)` | exact legacy equivalent |  |
 | 78 | `minecraft:glowstone_dust` | `new ItemStack(Items.glowstone_dust)` | exact legacy equivalent |  |
 | 79 | `minecraft:gunpowder` | `new ItemStack(Items.gunpowder)` | exact legacy equivalent | Not backported |
@@ -1442,7 +1442,7 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 84 | `minecraft:rabbit_foot` | `new ItemStack(ModItems.RABBIT_FOOT.get())` | EFR backport equivalent | Not backported |
 | 85 | `minecraft:glistering_melon_slice` | `new ItemStack(Items.speckled_melon)` | exact legacy equivalent | Not backported |
 | 86 | `minecraft:spider_eye` | `new ItemStack(Items.spider_eye)` | exact legacy equivalent |  |
-| 87 | `minecraft:pufferfish` | `Omitted` | missing | Not backported |
+| 87 | `minecraft:pufferfish` | `new ItemStack(Items.fish, 1, 3)` | EFR backport equivalent | Automatically resolved |
 | 88 | `minecraft:magma_cream` | `new ItemStack(Items.magma_cream)` | exact legacy equivalent | Not backported |
 | 89 | `minecraft:golden_carrot` | `new ItemStack(Items.golden_carrot)` | exact legacy equivalent | Not backported |
 | 90 | `minecraft:ghast_tear` | `new ItemStack(Items.ghast_tear)` | exact legacy equivalent | Not backported |
@@ -1500,14 +1500,14 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 | 142 | `minecraft:spire_armor_trim_smithing_template` | `Omitted` | missing | Not backported |
 | 143 | `minecraft:flow_armor_trim_smithing_template` | `Omitted` | missing | Not backported |
 | 144 | `minecraft:bolt_armor_trim_smithing_template` | `Omitted` | missing | Not backported |
-| 145 | `minecraft:experience_bottle` | `Omitted` | missing | Not backported |
+| 145 | `minecraft:experience_bottle` | `new ItemStack(Items.experience_bottle)` | EFR backport equivalent | Automatically resolved |
 | 146 | `minecraft:trial_key` | `Omitted` | missing | Not backported |
 | 147 | `minecraft:ominous_trial_key` | `Omitted` | missing | Not backported |
 
 ## Tab: Spawn Eggs (`itemGroup.spawnEggs`)
 | Index | 1.21.4 Registry ID | 1.7.10 / EFR Constructor | Status | Notes |
-|---|---|---|---|---|
-| 0 | `minecraft:spawner` | `Omitted` | missing | Not backported |
+| --- | --- | --- | --- | --- |
+| 0 | `minecraft:spawner` | `new ItemStack(Blocks.mob_spawner)` | EFR backport equivalent | Automatically resolved |
 | 1 | `minecraft:trial_spawner` | `Omitted` | missing | Not backported |
 | 2 | `minecraft:creaking_heart` | `Omitted` | missing | Not backported |
 | 3 | `minecraft:allay_spawn_egg` | `Omitted` | missing | Not backported |
@@ -1592,7 +1592,7 @@ This document maps all entries from Minecraft 1.21.4 creative tabs directly to t
 
 ## Tab: Operator Utilities (`itemGroup.op`)
 | Index | 1.21.4 Registry ID | 1.7.10 / EFR Constructor | Status | Notes |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 0 | `minecraft:command_block` | `new ItemStack(Blocks.command_block)` | exact legacy equivalent |  |
 | 1 | `minecraft:chain_command_block` | `Omitted` | missing | Not backported |
 | 2 | `minecraft:repeating_command_block` | `Omitted` | missing | Not backported |

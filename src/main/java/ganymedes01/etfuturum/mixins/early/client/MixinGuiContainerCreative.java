@@ -20,6 +20,9 @@ public abstract class MixinGuiContainerCreative extends InventoryEffectRenderer 
     private static int selectedTabIndex;
 
     @Shadow(remap = false)
+    private static int tabPage;
+
+    @Shadow(remap = false)
     private int maxPages;
 
     public MixinGuiContainerCreative(net.minecraft.inventory.Container container) {
@@ -86,7 +89,7 @@ public abstract class MixinGuiContainerCreative extends InventoryEffectRenderer 
                 return tab;
             }
         }
-        // Map vanilla tabs
+        // Map hardcoded vanilla tabs if they are somehow accessed directly
         if (tab == CreativeTabs.tabBlock) return ModernCreativeTabs.BUILDING_BLOCKS;
         if (tab == CreativeTabs.tabDecorations) return ModernCreativeTabs.BUILDING_BLOCKS;
         if (tab == CreativeTabs.tabRedstone) return ModernCreativeTabs.REDSTONE_BLOCKS;
@@ -98,7 +101,8 @@ public abstract class MixinGuiContainerCreative extends InventoryEffectRenderer 
         if (tab == CreativeTabs.tabBrewing) return ModernCreativeTabs.FOOD_AND_DRINKS;
         if (tab == CreativeTabs.tabMaterials) return ModernCreativeTabs.INGREDIENTS;
 
-        return ModernCreativeTabs.BUILDING_BLOCKS;
+        // If it's not a legacy vanilla tab, and it's not our modern tab, it MUST be a Mod Tab. Allow it!
+        return tab;
     }
 
     @Inject(method = "func_147050_b", at = @At("HEAD"), cancellable = true)
@@ -114,7 +118,10 @@ public abstract class MixinGuiContainerCreative extends InventoryEffectRenderer 
     private void onCheckTabClicked(CreativeTabs tab, int relativeX, int relativeY, CallbackInfoReturnable<Boolean> cir) {
         int index = getModernTabIndex(tab);
         if (index == -1) {
-            cir.setReturnValue(false);
+            return; // Let vanilla handle clicks for foreign Mod tabs
+        }
+        if (tabPage != 0) {
+            cir.setReturnValue(false); // Do not allow our modern tabs to be clicked on page 2+
             return;
         }
         int x = getTabX(index);
@@ -124,12 +131,16 @@ public abstract class MixinGuiContainerCreative extends InventoryEffectRenderer 
 
     @Inject(method = "func_147052_b", at = @At("HEAD"), cancellable = true)
     private void cancelVanillaTabHover(CreativeTabs tab, int mouseX, int mouseY, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(false);
+        if (java.util.Arrays.asList(getModernTabs()).contains(tab)) {
+            cir.setReturnValue(false);
+        }
     }
 
     @Inject(method = "func_147051_a", at = @At("HEAD"), cancellable = true)
     private void cancelVanillaDrawTab(CreativeTabs tab, CallbackInfo ci) {
-        ci.cancel();
+        if (java.util.Arrays.asList(getModernTabs()).contains(tab)) {
+            ci.cancel();
+        }
     }
 
     private void drawModernTab(CreativeTabs tab) {
@@ -181,8 +192,14 @@ public abstract class MixinGuiContainerCreative extends InventoryEffectRenderer 
         this.zLevel = 0.0F;
     }
 
-    @Inject(method = "drawGuiContainerBackgroundLayer", at = @At("TAIL"))
+    @Inject(method = "drawGuiContainerBackgroundLayer", at = @At("RETURN"))
     private void drawModernTabs(float partialTicks, int mouseX, int mouseY, CallbackInfo ci) {
+        if (tabPage != 0) return;
+        
+        // Reset OpenGL state to fix dark tint leak from GuiInventory.func_147046_a (player model rendering)
+        org.lwjgl.opengl.GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
+        
         for (CreativeTabs tab : getModernTabs()) {
             if (tab != null && tab.getTabIndex() != selectedTabIndex) {
                 drawModernTab(tab);
@@ -195,8 +212,9 @@ public abstract class MixinGuiContainerCreative extends InventoryEffectRenderer 
         }
     }
 
-    @Inject(method = "drawScreen", at = @At("TAIL"))
+    @Inject(method = "drawScreen", at = @At("RETURN"))
     private void drawModernTabHoverText(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+        if (tabPage != 0) return;
         for (CreativeTabs tab : getModernTabs()) {
             if (tab != null) {
                 int index = getModernTabIndex(tab);
@@ -212,14 +230,16 @@ public abstract class MixinGuiContainerCreative extends InventoryEffectRenderer 
 
     @Inject(method = "initGui", at = @At("TAIL"))
     private void onInitGuiTail(CallbackInfo ci) {
-        maxPages = 0;
-        java.util.Iterator iterator = this.buttonList.iterator();
-        while (iterator.hasNext()) {
-            Object obj = iterator.next();
-            if (obj instanceof GuiButton) {
-                GuiButton button = (GuiButton) obj;
-                if (button.id == 101 || button.id == 102) {
-                    iterator.remove();
+        if (CreativeTabs.creativeTabArray.length <= 14) {
+            maxPages = 0;
+            java.util.Iterator iterator = this.buttonList.iterator();
+            while (iterator.hasNext()) {
+                Object obj = iterator.next();
+                if (obj instanceof GuiButton) {
+                    GuiButton button = (GuiButton) obj;
+                    if (button.id == 101 || button.id == 102) {
+                        iterator.remove();
+                    }
                 }
             }
         }
@@ -227,4 +247,28 @@ public abstract class MixinGuiContainerCreative extends InventoryEffectRenderer 
 
     @Shadow(remap = false)
     private void func_147050_b(CreativeTabs tab) {}
+
+    @Inject(method = "actionPerformed", at = @At("TAIL"))
+    private void onActionPerformed(GuiButton button, CallbackInfo ci) {
+        if (button.id == 101 || button.id == 102) {
+            CreativeTabs[] tabs = CreativeTabs.creativeTabArray;
+            if (button.id == 101) {
+                // Previous page: select the last valid tab on the previous page
+                for (int i = tabs.length - 1; i >= 0; i--) {
+                    if (tabs[i] != null && tabs[i].getTabPage() == tabPage && tabs[i] != CreativeTabs.tabAllSearch && tabs[i] != CreativeTabs.tabInventory) {
+                        this.func_147050_b(tabs[i]);
+                        break;
+                    }
+                }
+            } else if (button.id == 102) {
+                // Next page: select the first valid tab on the next page
+                for (int i = 0; i < tabs.length; i++) {
+                    if (tabs[i] != null && tabs[i].getTabPage() == tabPage && tabs[i] != CreativeTabs.tabAllSearch && tabs[i] != CreativeTabs.tabInventory) {
+                        this.func_147050_b(tabs[i]);
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }

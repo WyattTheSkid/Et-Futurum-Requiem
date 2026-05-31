@@ -45,7 +45,9 @@ public class ModernCreativeTab extends CreativeTabs {
             @Override
             public void accept(ItemStack stack) {
                 if (stack != null && stack.getItem() != null) {
-                    list.add(stack);
+                    if (Item.itemRegistry.getNameForObject(stack.getItem()) != null) {
+                        list.add(stack);
+                    }
                 }
             }
         });

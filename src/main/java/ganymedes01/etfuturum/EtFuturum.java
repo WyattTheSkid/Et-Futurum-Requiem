@@ -302,6 +302,8 @@ public class EtFuturum {
 	@EventHandler
 	@SuppressWarnings("unchecked")
 	public void postInit(FMLPostInitializationEvent event) {
+		ganymedes01.etfuturum.core.handlers.creativetabs.ModernCreativeTabs.postInit();
+		
 		if (ConfigFunctions.enableUpdatedFoodValues) {
 			((ItemFood) Items.carrot).healAmount = 3;
 			((ItemFood) Items.baked_potato).healAmount = 5;
