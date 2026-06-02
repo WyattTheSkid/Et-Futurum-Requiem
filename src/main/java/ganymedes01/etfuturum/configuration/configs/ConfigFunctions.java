@@ -167,6 +167,11 @@ public class ConfigFunctions extends ConfigBase {
 	public static boolean useSeparateCreativeTabs;
 	public static boolean mobSpawnerEgging;
 	public static boolean fireworkRecipeFixes;
+	public static boolean offhandHudEnabled;
+	public static boolean offhandFirstPersonRender;
+	public static boolean offhandThirdPersonRender;
+	public static boolean offhandSwapKeyEnabled;
+	public static boolean offhandDebugLogging;
 	public static String subtitleBlacklist;
 	public static String[] extraDropRawOres = new String[]{"oreCopper", "oreTin"};
 
@@ -225,6 +230,7 @@ public class ConfigFunctions extends ConfigBase {
 		elytraDataWatcherFlag = (byte) getInt("elytraDataWatcherFlag", catSettings, 7, 0, 31, "The data watcher flag for the Elytra, used to sync the elytra animation with other players. In vanilla the max value is 7, players use 0-4, so you can set this to 6 or 7 by default. ASJCore increases the max value to 31.\nDo not change this value if you don't need to, or do not know what you're doing.");
 		useStoneHardnessForDeepslate = getBoolean("useStoneHardnessForDeepslate", catSettings, false, "Whether deepslate blocks should have the same hardness as their stone counterparts. This allows the asthetics of deepslate without the added hardness.");
 		useSeparateCreativeTabs = getBoolean("useSeparateCreativeTabs", catSettings, false, "If true, Et Futurum Requiem items and blocks will be placed in their own separate Creative Tabs. If false, they will be seamlessly sorted into the vanilla creative tabs alongside base game items.");
+		offhandDebugLogging = getBoolean("offhandDebugLogging", catSettings, false, "Enable debug logging for offhand synchronization.");
 
 		//client
 		enableTransparentAmour = getBoolean("enableTransparentAmour", catClient, true, "Allow non-opaque armour");
@@ -238,6 +244,10 @@ public class ConfigFunctions extends ConfigBase {
 		enableNewTextures = getBoolean("enableNewTextures", catClient, true, "Replace tall grass and sponge textures with modern version");
 		enableLangReplacements = getBoolean("enableLangReplacements", catClient, true, "Replaces some lang keys with a more modern version, such as calling some old wood items \"oak\", calling beds \"Red Bed\", and so on. Full list of replaced keys can be seen in the mod jar at resources/resourcepacks/vanilla_overrides/assets/minecraft/lang");
 		inventoryBedModels = getBoolean("inventoryBedModels", catClient, true, "Render beds with a 3D inventory model instead of a 2D sprite.");
+		offhandHudEnabled = getBoolean("offhandHudEnabled", catClient, true, "Render the offhand HUD slot beside the hotbar.");
+		offhandFirstPersonRender = getBoolean("offhandFirstPersonRender", catClient, true, "Render the offhand item in first person.");
+		offhandThirdPersonRender = getBoolean("offhandThirdPersonRender", catClient, true, "Render players' offhand items in third person.");
+		offhandSwapKeyEnabled = getBoolean("offhandSwapKeyEnabled", catClient, true, "Enable the swap-hands key binding.");
 
 		//commands
 		enableFillCommand = getBoolean("enableFillCommand", catCommands, true, "Enable the /fill command.");

@@ -249,6 +249,7 @@ public class EtFuturum {
 		networkWrapper.registerMessage(ChestBoatOpenInventoryHandler.class, ChestBoatOpenInventoryMessage.class, 5, Side.SERVER);
 		networkWrapper.registerMessage(StartElytraFlyingHandler.class, StartElytraFlyingMessage.class, 6, Side.SERVER);
 		networkWrapper.registerMessage(AttackYawHandler.class, AttackYawMessage.class, 7, Side.CLIENT);
+		OffhandNetwork.register();
 
 		if (!Reference.SNAPSHOT_BUILD && !Reference.DEV_ENVIRONMENT) {
 			MCLibModules.updateCheckAPI.submitModTask(Tags.MOD_ID, Tags.VERSION, Reference.VERSION_URL);

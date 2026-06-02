@@ -21,6 +21,11 @@ import ganymedes01.etfuturum.core.utils.Utils;
 import ganymedes01.etfuturum.entities.*;
 import ganymedes01.etfuturum.inventory.*;
 import ganymedes01.etfuturum.lib.GUIIDs;
+import ganymedes01.etfuturum.network.OffhandNetwork;
+import ganymedes01.etfuturum.network.OffhandSwingMessage;
+import ganymedes01.etfuturum.network.OffhandSyncMessage;
+import ganymedes01.etfuturum.network.OffhandTrackingMessage;
+import ganymedes01.etfuturum.offhand.OffhandEventHandler;
 import ganymedes01.etfuturum.spectator.SpectatorMode;
 import ganymedes01.etfuturum.tileentities.*;
 import net.minecraft.entity.EnumCreatureType;
@@ -44,6 +49,8 @@ public class CommonProxy implements IGuiHandler {
 
 	public void registerEvents() {
 		MinecraftForge.EVENT_BUS.register(EntityEventHandler.INSTANCE);
+		FMLCommonHandler.instance().bus().register(OffhandEventHandler.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(OffhandEventHandler.INSTANCE);
 
 		FMLCommonHandler.instance().bus().register(ServerEventHandler.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(ServerEventHandler.INSTANCE);
@@ -305,5 +312,11 @@ public class CommonProxy implements IGuiHandler {
 	}
 
 	public void registerRenderers() {
+	}
+
+	public void registerOffhandClientPacketHandlers() {
+		EtFuturum.networkWrapper.registerMessage(OffhandNetwork.NoopOffhandSyncHandler.class, OffhandSyncMessage.class, OffhandNetwork.PACKET_SYNC_OFFHAND, Side.CLIENT);
+		EtFuturum.networkWrapper.registerMessage(OffhandNetwork.NoopOffhandTrackingHandler.class, OffhandTrackingMessage.class, OffhandNetwork.PACKET_SYNC_TRACKING, Side.CLIENT);
+		EtFuturum.networkWrapper.registerMessage(OffhandNetwork.NoopOffhandSwingHandler.class, OffhandSwingMessage.class, OffhandNetwork.PACKET_OFFHAND_SWING, Side.CLIENT);
 	}
 }

@@ -5,9 +5,16 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.ModBlocks;
 import ganymedes01.etfuturum.ModItems;
 import ganymedes01.etfuturum.client.model.ModelShulker;
+import ganymedes01.etfuturum.client.offhand.OffhandClientEventHandler;
+import ganymedes01.etfuturum.client.offhand.OffhandSwingClientHandler;
+import ganymedes01.etfuturum.client.offhand.OffhandSyncClientHandler;
+import ganymedes01.etfuturum.client.offhand.OffhandTrackingClientHandler;
+import ganymedes01.etfuturum.client.offhand.OffhandKeyBindings;
 import ganymedes01.etfuturum.client.renderer.GlowingEffectRenderer;
 import ganymedes01.etfuturum.client.renderer.block.*;
 import ganymedes01.etfuturum.client.renderer.entity.*;
@@ -25,6 +32,10 @@ import ganymedes01.etfuturum.core.handlers.BubbleColumnSoundEventHandler;
 import ganymedes01.etfuturum.core.handlers.ClientEventHandler;
 import ganymedes01.etfuturum.entities.*;
 import ganymedes01.etfuturum.lib.RenderIDs;
+import ganymedes01.etfuturum.network.OffhandNetwork;
+import ganymedes01.etfuturum.network.OffhandSwingMessage;
+import ganymedes01.etfuturum.network.OffhandSyncMessage;
+import ganymedes01.etfuturum.network.OffhandTrackingMessage;
 import ganymedes01.etfuturum.spectator.SpectatorModeClient;
 import ganymedes01.etfuturum.tileentities.*;
 import ganymedes01.etfuturum.world.nether.biome.utils.BiomeFogEventHandler;
@@ -51,7 +62,10 @@ public class ClientProxy extends CommonProxy {
 	public void registerEvents() {
 		super.registerEvents();
 		FMLCommonHandler.instance().bus().register(ClientEventHandler.INSTANCE);
+		FMLCommonHandler.instance().bus().register(OffhandClientEventHandler.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(ClientEventHandler.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(OffhandClientEventHandler.INSTANCE);
+		OffhandKeyBindings.register();
 		if (ConfigMixins.enableSpectatorMode) {
 			FMLCommonHandler.instance().bus().register(SpectatorModeClient.INSTANCE);
 			MinecraftForge.EVENT_BUS.register(SpectatorModeClient.INSTANCE);
@@ -73,6 +87,13 @@ public class ClientProxy extends CommonProxy {
 		registerItemRenderers();
 		registerBlockRenderers();
 		registerEntityRenderers();
+	}
+
+	@Override
+	public void registerOffhandClientPacketHandlers() {
+		EtFuturum.networkWrapper.registerMessage(OffhandSyncClientHandler.class, OffhandSyncMessage.class, OffhandNetwork.PACKET_SYNC_OFFHAND, Side.CLIENT);
+		EtFuturum.networkWrapper.registerMessage(OffhandTrackingClientHandler.class, OffhandTrackingMessage.class, OffhandNetwork.PACKET_SYNC_TRACKING, Side.CLIENT);
+		EtFuturum.networkWrapper.registerMessage(OffhandSwingClientHandler.class, OffhandSwingMessage.class, OffhandNetwork.PACKET_OFFHAND_SWING, Side.CLIENT);
 	}
 
 	private void registerItemRenderers() {

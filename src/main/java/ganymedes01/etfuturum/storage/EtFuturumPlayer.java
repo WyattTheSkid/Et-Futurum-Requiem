@@ -2,8 +2,10 @@ package ganymedes01.etfuturum.storage;
 
 import ganymedes01.etfuturum.Tags;
 import ganymedes01.etfuturum.configuration.configs.ConfigBlocksItems;
+import ganymedes01.etfuturum.offhand.OffhandInventory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
@@ -13,8 +15,10 @@ public final class EtFuturumPlayer implements IExtendedEntityProperties {
 	private static final String PROPERTIES_NAME = Tags.MOD_ID;
 
 	private static final String TAG_ENCHANTMENT_SEED = "EnchantmentSeed";
+	private static final String TAG_OFFHAND_STACK = "Offhand";
 
 	private int enchantmentSeed = 0;
+	private ItemStack offhandStack;
 
 	private EtFuturumPlayer() {
 		// NO-OP
@@ -26,6 +30,12 @@ public final class EtFuturumPlayer implements IExtendedEntityProperties {
 
 		if (ConfigBlocksItems.enableEnchantingTable) {
 			tag.setInteger(TAG_ENCHANTMENT_SEED, enchantmentSeed);
+		}
+		ItemStack normalizedOffhand = OffhandInventory.normalizeStack(offhandStack);
+		if (normalizedOffhand != null) {
+			NBTTagCompound offhandTag = new NBTTagCompound();
+			normalizedOffhand.writeToNBT(offhandTag);
+			tag.setTag(TAG_OFFHAND_STACK, offhandTag);
 		}
 
 		if (!tag.hasNoTags()) {
@@ -40,6 +50,11 @@ public final class EtFuturumPlayer implements IExtendedEntityProperties {
 
 		if (tag.hasKey(TAG_ENCHANTMENT_SEED, Constants.NBT.TAG_INT)) {
 			enchantmentSeed = tag.getInteger(TAG_ENCHANTMENT_SEED);
+		}
+
+		offhandStack = null;
+		if (tag.hasKey(TAG_OFFHAND_STACK, Constants.NBT.TAG_COMPOUND)) {
+			offhandStack = OffhandInventory.normalizeStack(ItemStack.loadItemStackFromNBT(tag.getCompoundTag(TAG_OFFHAND_STACK)));
 		}
 	}
 
@@ -74,5 +89,13 @@ public final class EtFuturumPlayer implements IExtendedEntityProperties {
 
 	public void setEnchantmentSeed(int enchantmentSeed) {
 		this.enchantmentSeed = enchantmentSeed;
+	}
+
+	public ItemStack getOffhandStack() {
+		return OffhandInventory.normalizeStack(offhandStack);
+	}
+
+	public void setOffhandStack(ItemStack offhandStack) {
+		this.offhandStack = OffhandInventory.normalizeStack(offhandStack);
 	}
 }

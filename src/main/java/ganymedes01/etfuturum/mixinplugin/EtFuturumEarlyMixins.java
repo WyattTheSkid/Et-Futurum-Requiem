@@ -102,6 +102,11 @@ public class EtFuturumEarlyMixins implements IFMLLoadingPlugin, IEarlyMixinLoade
 			mixins.add("closedrops.MixinEntityPlayerMP");
 		}
 
+		mixins.add("offhand.MixinInventoryPlayer");
+		mixins.add("offhand.MixinEntityPlayer");
+		mixins.add("offhand.MixinContainerPlayer");
+		mixins.add("offhand.MixinNetHandlerPlayServer");
+
 		if (ConfigMixins.enableElytra) {
 			mixins.add("backlytra.MixinEntityPlayer");
 			mixins.add("backlytra.MixinEntityLivingBase");
@@ -284,6 +289,12 @@ public class EtFuturumEarlyMixins implements IFMLLoadingPlugin, IEarlyMixinLoade
 			mixins.add("client.MixinRendererLivingEntity");
 			mixins.add("items.MixinRenderBiped");
 			mixins.add("items.MixinRenderPlayer");
+			mixins.add("offhand.client.MixinMinecraft");
+			mixins.add("offhand.client.MixinItemRenderer");
+			mixins.add("offhand.client.MixinRenderPlayer");
+			mixins.add("offhand.client.MixinModelBiped");
+			mixins.add("offhand.client.MixinRendererLivingEntity");
+			mixins.add("offhand.client.MixinGuiContainerCreative");
 			if (ConfigMixins.modernCreativeInventory) {
 				mixins.add("client.MixinGuiContainerCreative");
 			}

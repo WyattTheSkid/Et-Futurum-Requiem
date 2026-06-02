@@ -38,6 +38,7 @@ potion.levitation.postfix=Potion of Levitation
 
 debug.gamemodes.select_next=%s Next
 debug.gamemodes.press_f4=[ F4 ]
+key.etfuturum.offhand.swap=Swap Item With Offhand
 
 # Gamemodes
 gameMode.Spectator=Spectator Mode
