@@ -100,6 +100,7 @@ public class ClientProxy extends CommonProxy {
 		EtFuturum.networkWrapper.registerMessage(OffhandSyncClientHandler.class, OffhandSyncMessage.class, OffhandNetwork.PACKET_SYNC_OFFHAND, Side.CLIENT);
 		EtFuturum.networkWrapper.registerMessage(OffhandTrackingClientHandler.class, OffhandTrackingMessage.class, OffhandNetwork.PACKET_SYNC_TRACKING, Side.CLIENT);
 		EtFuturum.networkWrapper.registerMessage(OffhandSwingClientHandler.class, OffhandSwingMessage.class, OffhandNetwork.PACKET_OFFHAND_SWING, Side.CLIENT);
+		EtFuturum.networkWrapper.registerMessage(ganymedes01.etfuturum.network.RecipeUnlockSyncHandler.class, ganymedes01.etfuturum.network.RecipeUnlockSyncMessage.class, 14, Side.CLIENT);
 	}
 
 	@Override

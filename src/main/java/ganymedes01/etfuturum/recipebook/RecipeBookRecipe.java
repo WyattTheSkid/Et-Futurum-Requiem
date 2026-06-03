@@ -13,13 +13,30 @@ public class RecipeBookRecipe {
 	private final ItemStack output;
 	private final ItemStack[] ingredients;
 	private final String searchText;
+	private final int width;
+	private final int height;
+	private final boolean shapeless;
 
-	public RecipeBookRecipe(int id, IRecipe recipe, ItemStack output, ItemStack[] ingredients) {
+	private final int recipeType;
+
+	public RecipeBookRecipe(int id, IRecipe recipe, ItemStack output, ItemStack[] ingredients, int width, int height, boolean shapeless) {
+		this(id, recipe, output, ingredients, width, height, shapeless, 0);
+	}
+
+	public RecipeBookRecipe(int id, IRecipe recipe, ItemStack output, ItemStack[] ingredients, int width, int height, boolean shapeless, int recipeType) {
 		this.id = id;
 		this.recipe = recipe;
 		this.output = output;
 		this.ingredients = ingredients;
 		this.searchText = output.getDisplayName().toLowerCase();
+		this.width = width;
+		this.height = height;
+		this.shapeless = shapeless;
+		this.recipeType = recipeType;
+	}
+
+	public int getRecipeType() {
+		return recipeType;
 	}
 
 	public int getId() {
@@ -34,8 +51,47 @@ public class RecipeBookRecipe {
 		return output;
 	}
 
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public boolean isShapeless() {
+		return shapeless;
+	}
+
+	public boolean matchesGrid(int gridWidth, int gridHeight) {
+		if (shapeless) {
+			return ingredients.length <= gridWidth * gridHeight;
+		}
+		return width <= gridWidth && height <= gridHeight;
+	}
+
+	public ItemStack[] getIngredients() {
+		return ingredients;
+	}
+
 	public ItemStack getIngredient(int slot) {
+		if (slot >= ingredients.length) return null;
 		return ingredients[slot];
+	}
+
+	public ItemStack getIngredientForSlot(int slot, int gridWidth, int gridHeight) {
+		if (shapeless) {
+			return slot < ingredients.length ? ingredients[slot] : null;
+		}
+		int row = slot / gridWidth;
+		int col = slot % gridWidth;
+		if (col < width && row < height) {
+			int idx = col + row * width;
+			if (idx < ingredients.length) {
+				return ingredients[idx];
+			}
+		}
+		return null;
 	}
 
 	public boolean matchesSearch(String search) {

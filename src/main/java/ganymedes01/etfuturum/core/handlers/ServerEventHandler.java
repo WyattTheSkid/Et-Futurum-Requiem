@@ -2123,4 +2123,325 @@ public class ServerEventHandler {
 	//      }
 	//  }
 	//}
+
+	@SubscribeEvent
+	public void onPlayerTick(cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent event) {
+		if (event.phase != cpw.mods.fml.common.gameevent.TickEvent.Phase.END || event.side != Side.SERVER) return;
+
+		EntityPlayer player = event.player;
+		if (player == null || player.worldObj == null || player instanceof FakePlayer) return;
+
+		if (player.ticksExisted % 20 == 0) {
+			checkAndUnlockRecipes(player);
+		}
+	}
+
+	@SubscribeEvent
+	public void onPlayerLoggedIn(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
+		syncPlayerRecipes(event.player);
+	}
+
+	@SubscribeEvent
+	public void onPlayerChangedDimension(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent event) {
+		syncPlayerRecipes(event.player);
+	}
+
+	@SubscribeEvent
+	public void onPlayerRespawn(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent event) {
+		syncPlayerRecipes(event.player);
+	}
+
+	private void syncPlayerRecipes(EntityPlayer player) {
+		if (player instanceof EntityPlayerMP) {
+			NBTTagCompound persisted = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+			int[] unlockedIds = persisted != null ? persisted.getIntArray("UnlockedRecipes") : new int[0];
+			EtFuturum.networkWrapper.sendTo(new ganymedes01.etfuturum.network.RecipeUnlockSyncMessage(unlockedIds), (EntityPlayerMP) player);
+		}
+	}
+
+	private static final java.util.Map<Item, java.util.Set<Item>> recipeUnlockMap = new java.util.HashMap<>();
+
+	private static void addUnlock(Item trigger, Object... outputs) {
+		if (trigger == null) return;
+		java.util.Set<Item> set = recipeUnlockMap.get(trigger);
+		if (set == null) {
+			set = new java.util.HashSet<>();
+			recipeUnlockMap.put(trigger, set);
+		}
+		for (Object obj : outputs) {
+			if (obj instanceof Item) {
+				set.add((Item) obj);
+			} else if (obj instanceof net.minecraft.block.Block) {
+				set.add(Item.getItemFromBlock((net.minecraft.block.Block) obj));
+			}
+		}
+	}
+
+	static {
+		// Log to Planks
+		addUnlock(Item.getItemFromBlock(Blocks.log), Item.getItemFromBlock(Blocks.planks));
+		addUnlock(Item.getItemFromBlock(Blocks.log2), Item.getItemFromBlock(Blocks.planks));
+
+		// 1. Planks
+		addUnlock(Item.getItemFromBlock(Blocks.planks),
+			Blocks.crafting_table, Blocks.wooden_slab, Blocks.wooden_button, Blocks.wooden_pressure_plate,
+			Blocks.chest, Items.wooden_door, Blocks.trapdoor, Items.sign,
+			Blocks.fence, Blocks.fence_gate, Items.stick, Items.bowl,
+			Items.wooden_pickaxe, Items.wooden_shovel, Items.wooden_axe, Items.wooden_sword, Items.wooden_hoe
+		);
+
+		// 2. Sticks
+		addUnlock(Items.stick,
+			Blocks.ladder, Blocks.fence, Blocks.fence_gate,
+			Items.wooden_pickaxe, Items.wooden_shovel, Items.wooden_axe, Items.wooden_sword, Items.wooden_hoe,
+			Items.stone_pickaxe, Items.stone_shovel, Items.stone_axe, Items.stone_sword, Items.stone_hoe,
+			Items.iron_pickaxe, Items.iron_shovel, Items.iron_axe, Items.iron_sword, Items.iron_hoe,
+			Items.golden_pickaxe, Items.golden_shovel, Items.golden_axe, Items.golden_sword, Items.golden_hoe
+		);
+
+		// 3. Cobblestone
+		addUnlock(Item.getItemFromBlock(Blocks.cobblestone),
+			Items.stone_pickaxe, Items.stone_shovel, Items.stone_axe, Items.stone_sword, Items.stone_hoe,
+			Blocks.furnace, Blocks.lever, Blocks.cobblestone_wall, Blocks.stone_stairs, Blocks.stone_slab,
+			Blocks.stone_pressure_plate, Blocks.stone_button
+		);
+
+		// 4. Coal/Charcoal
+		addUnlock(Items.coal,
+			Blocks.torch, Blocks.coal_block
+		);
+
+		// 5. Iron Ingot
+		addUnlock(Items.iron_ingot,
+			Items.iron_pickaxe, Items.iron_shovel, Items.iron_axe, Items.iron_sword, Items.iron_hoe,
+			Items.iron_helmet, Items.iron_chestplate, Items.iron_leggings, Items.iron_boots,
+			Blocks.iron_block, Items.shears, Items.flint_and_steel, Items.bucket, Items.compass,
+			Blocks.anvil, Blocks.hopper, Items.cauldron, Items.minecart, Blocks.rail,
+			Blocks.detector_rail, Blocks.activator_rail, Blocks.piston, Blocks.heavy_weighted_pressure_plate,
+			Items.iron_door, Blocks.iron_bars
+		);
+
+		// 6. Gold Ingot
+		addUnlock(Items.gold_ingot,
+			Items.golden_pickaxe, Items.golden_shovel, Items.golden_axe, Items.golden_sword, Items.golden_hoe,
+			Items.golden_helmet, Items.golden_chestplate, Items.golden_leggings, Items.golden_boots,
+			Blocks.gold_block, Items.clock, Blocks.golden_rail, Items.golden_apple, Items.golden_carrot,
+			Items.speckled_melon, Blocks.light_weighted_pressure_plate
+		);
+
+		// 7. Diamond
+		addUnlock(Items.diamond,
+			Items.diamond_pickaxe, Items.diamond_shovel, Items.diamond_axe, Items.diamond_sword, Items.diamond_hoe,
+			Items.diamond_helmet, Items.diamond_chestplate, Items.diamond_leggings, Items.diamond_boots,
+			Blocks.diamond_block, Blocks.jukebox, Blocks.enchanting_table
+		);
+
+		// 8. Redstone
+		addUnlock(Items.redstone,
+			Items.compass, Items.clock, Blocks.piston, Blocks.sticky_piston, Blocks.dispenser, Blocks.dropper,
+			Blocks.noteblock, Blocks.redstone_torch, Blocks.unpowered_repeater, Blocks.unpowered_comparator,
+			Blocks.redstone_lamp, Blocks.redstone_block, Blocks.detector_rail, Blocks.activator_rail
+		);
+
+		// 9. String
+		addUnlock(Items.string,
+			Items.bow, Items.fishing_rod, Items.lead, Blocks.wool
+		);
+
+		// 10. Clay / Brick
+		addUnlock(Items.clay_ball, Blocks.clay);
+		addUnlock(Items.brick, Items.flower_pot, Blocks.brick_block, Blocks.brick_stairs, Blocks.stone_slab);
+
+		// 11. Nether Quartz
+		addUnlock(Items.quartz, Blocks.quartz_block, Blocks.quartz_stairs, Blocks.stone_slab, Blocks.daylight_detector, Blocks.unpowered_comparator);
+
+		// 12. Nether Star
+		addUnlock(Items.nether_star, Blocks.beacon);
+
+		// 13. Slimeball
+		addUnlock(Items.slime_ball, Blocks.sticky_piston, Items.lead);
+
+		// 14. Ender Pearl
+		addUnlock(Items.ender_pearl, Blocks.ender_chest, Items.ender_eye);
+
+		// 15. Obsidian
+		addUnlock(Item.getItemFromBlock(Blocks.obsidian), Blocks.ender_chest, Blocks.enchanting_table);
+
+		// 16. Book
+		addUnlock(Items.book, Blocks.bookshelf, Blocks.enchanting_table);
+
+		// 17. Sand
+		addUnlock(Item.getItemFromBlock(Blocks.sand), Blocks.tnt, Blocks.sandstone, Blocks.glass);
+
+		// 18. Gunpowder
+		addUnlock(Items.gunpowder, Blocks.tnt, Items.fireworks, Items.firework_charge);
+
+		// 19. Paper
+		addUnlock(Items.paper, Items.book, Items.map, Items.filled_map);
+
+		// 20. Leather
+		addUnlock(Items.leather, Items.leather_helmet, Items.leather_chestplate, Items.leather_leggings, Items.leather_boots, Items.item_frame, Items.book);
+
+		// 21. Wheat
+		addUnlock(Items.wheat, Items.bread, Blocks.hay_block, Items.cookie);
+
+		// 22. Sugar Cane
+		addUnlock(Items.reeds, Items.paper);
+
+		// 23. Sugar
+		addUnlock(Items.sugar, Items.cookie, Items.cake);
+
+		// 24. Pumpkin
+		addUnlock(Item.getItemFromBlock(Blocks.pumpkin), Items.pumpkin_pie, Blocks.lit_pumpkin);
+
+		// 25. Egg
+		addUnlock(Items.egg, Items.cake, Items.pumpkin_pie);
+
+		// 26. Milk Bucket
+		addUnlock(Items.milk_bucket, Items.cake);
+
+		// 27. Netherrack
+		addUnlock(Item.getItemFromBlock(Blocks.netherrack), Blocks.nether_brick);
+
+		// 28. Glowstone Dust
+		addUnlock(Items.glowstone_dust, Blocks.glowstone, Blocks.redstone_lamp);
+	}
+
+	private static Item getModItem(String name) {
+		return cpw.mods.fml.common.registry.GameRegistry.findItem("etfuturum", name);
+	}
+
+	private static Item getModBlock(String name) {
+		net.minecraft.block.Block b = cpw.mods.fml.common.registry.GameRegistry.findBlock("etfuturum", name);
+		return b != null ? Item.getItemFromBlock(b) : null;
+	}
+
+	private static boolean initializedModUnlocks = false;
+
+	private static void initModUnlocks() {
+		if (initializedModUnlocks) return;
+		initializedModUnlocks = true;
+
+		// Netherite Ingot
+		Item netheriteIngot = getModItem("netherite_ingot");
+		if (netheriteIngot != null) {
+			addUnlock(netheriteIngot,
+				getModItem("netherite_pickaxe"), getModItem("netherite_shovel"),
+				getModItem("netherite_axe"), getModItem("netherite_sword"), getModItem("netherite_hoe"),
+				getModItem("netherite_helmet"), getModItem("netherite_chestplate"),
+				getModItem("netherite_leggings"), getModItem("netherite_boots"),
+				getModBlock("netherite_block")
+			);
+		}
+
+		// Netherite Scrap
+		Item netheriteScrap = getModItem("netherite_scrap");
+		if (netheriteScrap != null) {
+			addUnlock(netheriteScrap, netheriteIngot);
+		}
+
+		// Copper Ingot
+		Item copperIngot = getModItem("copper_ingot");
+		if (copperIngot != null) {
+			addUnlock(copperIngot,
+				getModBlock("copper_block"), getModBlock("cut_copper"), getModBlock("lightning_rod"), getModItem("spyglass")
+			);
+		}
+
+		// Amethyst Shard
+		Item amethystShard = getModItem("amethyst_shard");
+		if (amethystShard != null) {
+			addUnlock(amethystShard,
+				getModBlock("tinted_glass"), getModBlock("amethyst_block"), getModItem("spyglass")
+			);
+		}
+
+		// Prismarine Shard
+		Item prismarineShard = getModItem("prismarine_shard");
+		if (prismarineShard != null) {
+			addUnlock(prismarineShard,
+				getModBlock("prismarine"), getModBlock("sea_lantern")
+			);
+		}
+
+		// Nautilus Shell
+		Item nautilusShell = getModItem("nautilus_shell");
+		if (nautilusShell != null) {
+			addUnlock(nautilusShell, getModBlock("conduit"));
+		}
+
+		// Shulker Shell
+		Item shulkerShell = getModItem("shulker_shell");
+		if (shulkerShell != null) {
+			addUnlock(shulkerShell, getModBlock("shulker_box"));
+		}
+
+		// Magma Block
+		Item magmaCream = Items.magma_cream;
+		if (magmaCream != null) {
+			addUnlock(magmaCream, getModBlock("magma_block"));
+		}
+	}
+
+	private void checkAndUnlockRecipes(EntityPlayer player) {
+		initModUnlocks();
+
+		NBTTagCompound entityData = player.getEntityData();
+		if (!entityData.hasKey(EntityPlayer.PERSISTED_NBT_TAG)) {
+			entityData.setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
+		}
+		NBTTagCompound persisted = entityData.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+
+		int[] unlockedIds = persisted.getIntArray("UnlockedRecipes");
+		java.util.Set<Integer> unlockedSet = new java.util.HashSet<>();
+		if (unlockedIds != null) {
+			for (int id : unlockedIds) {
+				unlockedSet.add(id);
+			}
+		}
+
+		boolean changed = false;
+		List<ganymedes01.etfuturum.recipebook.RecipeBookRecipe> recipes = ganymedes01.etfuturum.recipebook.RecipeBookRecipes.getRecipes();
+
+		for (ItemStack stack : player.inventory.mainInventory) {
+			if (stack == null || stack.getItem() == null) continue;
+
+			for (ganymedes01.etfuturum.recipebook.RecipeBookRecipe recipe : recipes) {
+				if (unlockedSet.contains(recipe.getId()) || ganymedes01.etfuturum.recipebook.RecipeBookRecipes.isUnlocked(recipe.getId())) continue;
+
+				if (canUnlockRecipeWith(recipe, stack)) {
+					unlockedSet.add(recipe.getId());
+					changed = true;
+				}
+			}
+		}
+
+		if (changed) {
+			int[] newIds = new int[unlockedSet.size()];
+			int idx = 0;
+			for (int id : unlockedSet) {
+				newIds[idx++] = id;
+			}
+			persisted.setIntArray("UnlockedRecipes", newIds);
+			if (player instanceof EntityPlayerMP) {
+				EtFuturum.networkWrapper.sendTo(new ganymedes01.etfuturum.network.RecipeUnlockSyncMessage(newIds), (EntityPlayerMP) player);
+			}
+		}
+	}
+
+
+
+	private static boolean canUnlockRecipeWith(ganymedes01.etfuturum.recipebook.RecipeBookRecipe recipe, ItemStack stack) {
+		if (recipe == null || recipe.getOutput() == null || stack == null) return false;
+		Item triggerItem = stack.getItem();
+		Item outputItem = recipe.getOutput().getItem();
+
+		// Only unlock via explicit trigger mappings - no fallback
+		java.util.Set<Item> unlockableOutputs = recipeUnlockMap.get(triggerItem);
+		if (unlockableOutputs != null) {
+			return unlockableOutputs.contains(outputItem);
+		}
+
+		return false;
+	}
 }

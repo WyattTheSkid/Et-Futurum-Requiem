@@ -1,7 +1,10 @@
 package ganymedes01.etfuturum.recipebook;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerPlayer;
+import net.minecraft.inventory.ContainerWorkbench;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -14,47 +17,77 @@ public final class RecipePlacementHelper {
 	}
 
 	public static boolean placeRecipe(EntityPlayerMP player, int recipeId, boolean craftAll) {
-		if (!(player.openContainer instanceof ContainerPlayer)) return false;
-		RecipeBookRecipe recipe = RecipeBookRecipes.getRecipe(recipeId);
-		if (recipe == null) return false;
-
-		ContainerPlayer container = (ContainerPlayer) player.openContainer;
-		ItemStack[] inventorySnapshot = copyInventory(player.inventory.mainInventory);
-		ItemStack[] craftSnapshot = new ItemStack[4];
-		for (int i = 0; i < 4; ++i) {
-			craftSnapshot[i] = copyStack(container.getSlot(1 + i).getStack());
+		Container openContainer = player.openContainer;
+		int matrixSize;
+		int gridWidth;
+		int gridHeight;
+		IInventory craftMatrix;
+		boolean isFurnace = openContainer instanceof net.minecraft.inventory.ContainerFurnace ||
+				openContainer instanceof ganymedes01.etfuturum.inventory.ContainerSmoker ||
+				openContainer instanceof ganymedes01.etfuturum.inventory.ContainerBlastFurnace;
+		int slotOffset = isFurnace ? 0 : 1;
+		
+		if (openContainer instanceof ContainerPlayer) {
+			matrixSize = 4;
+			gridWidth = 2;
+			gridHeight = 2;
+			craftMatrix = ((ContainerPlayer) openContainer).craftMatrix;
+		} else if (openContainer instanceof ContainerWorkbench) {
+			matrixSize = 9;
+			gridWidth = 3;
+			gridHeight = 3;
+			craftMatrix = ((ContainerWorkbench) openContainer).craftMatrix;
+		} else if (isFurnace) {
+			matrixSize = 1;
+			gridWidth = 1;
+			gridHeight = 1;
+			craftMatrix = null;
+		} else {
+			return false;
 		}
 
-		if (!clearCraftingGrid(player, container)) {
-			restore(player, container, inventorySnapshot, craftSnapshot);
+		RecipeBookRecipe recipe = RecipeBookRecipes.getRecipe(recipeId);
+		if (recipe == null) return false;
+		if (!recipe.matchesGrid(gridWidth, gridHeight)) return false;
+
+		ItemStack[] inventorySnapshot = copyInventory(player.inventory.mainInventory);
+		ItemStack[] craftSnapshot = new ItemStack[matrixSize];
+		for (int i = 0; i < matrixSize; ++i) {
+			craftSnapshot[i] = copyStack(openContainer.getSlot(slotOffset + i).getStack());
+		}
+
+		if (!clearCraftingGrid(player, openContainer, matrixSize, slotOffset)) {
+			restore(player, openContainer, inventorySnapshot, craftSnapshot, slotOffset);
 			return false;
 		}
 
 		int amount = craftAll ? recipe.getCraftableCount(player.inventory, recipe.getMaxIngredientStackSize()) : recipe.isCraftable(player.inventory) ? 1 : 0;
 		if (amount <= 0) {
-			restore(player, container, inventorySnapshot, craftSnapshot);
+			restore(player, openContainer, inventorySnapshot, craftSnapshot, slotOffset);
 			return false;
 		}
 
-		for (int i = 0; i < 4; ++i) {
-			ItemStack ingredient = recipe.getIngredient(i);
+		for (int i = 0; i < matrixSize; ++i) {
+			ItemStack ingredient = recipe.getIngredientForSlot(i, gridWidth, gridHeight);
 			if (ingredient == null) continue;
 			ItemStack placed = removeMatching(player, ingredient, amount);
 			if (placed == null) {
-				restore(player, container, inventorySnapshot, craftSnapshot);
+				restore(player, openContainer, inventorySnapshot, craftSnapshot, slotOffset);
 				return false;
 			}
-			container.getSlot(1 + i).putStack(placed);
+			openContainer.getSlot(slotOffset + i).putStack(placed);
 		}
 
-		container.onCraftMatrixChanged(container.craftMatrix);
-		container.detectAndSendChanges();
+		if (craftMatrix != null) {
+			openContainer.onCraftMatrixChanged(craftMatrix);
+		}
+		openContainer.detectAndSendChanges();
 		return true;
 	}
 
-	private static boolean clearCraftingGrid(EntityPlayerMP player, ContainerPlayer container) {
-		for (int i = 0; i < 4; ++i) {
-			Slot slot = container.getSlot(1 + i);
+	private static boolean clearCraftingGrid(EntityPlayerMP player, Container container, int matrixSize, int slotOffset) {
+		for (int i = 0; i < matrixSize; ++i) {
+			Slot slot = container.getSlot(slotOffset + i);
 			ItemStack stack = slot.getStack();
 			if (stack != null) {
 				slot.putStack(null);
@@ -96,14 +129,18 @@ public final class RecipePlacementHelper {
 		return ItemStack.areItemStackTagsEqual(placed, stack);
 	}
 
-	private static void restore(EntityPlayerMP player, ContainerPlayer container, ItemStack[] inventorySnapshot, ItemStack[] craftSnapshot) {
+	private static void restore(EntityPlayerMP player, Container container, ItemStack[] inventorySnapshot, ItemStack[] craftSnapshot, int slotOffset) {
 		for (int i = 0; i < inventorySnapshot.length; ++i) {
 			player.inventory.mainInventory[i] = copyStack(inventorySnapshot[i]);
 		}
 		for (int i = 0; i < craftSnapshot.length; ++i) {
-			container.getSlot(1 + i).putStack(copyStack(craftSnapshot[i]));
+			container.getSlot(slotOffset + i).putStack(copyStack(craftSnapshot[i]));
 		}
-		container.onCraftMatrixChanged(container.craftMatrix);
+		if (container instanceof ContainerPlayer) {
+			container.onCraftMatrixChanged(((ContainerPlayer) container).craftMatrix);
+		} else if (container instanceof ContainerWorkbench) {
+			container.onCraftMatrixChanged(((ContainerWorkbench) container).craftMatrix);
+		}
 		container.detectAndSendChanges();
 	}
 

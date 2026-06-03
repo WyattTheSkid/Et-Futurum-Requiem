@@ -4,51 +4,63 @@ import ganymedes01.etfuturum.client.recipebook.SurvivalRecipeBookGui;
 import ganymedes01.etfuturum.offhand.OffhandLayout;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.renderer.InventoryEffectRenderer;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiFurnace;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(GuiInventory.class)
-public abstract class MixinGuiInventory extends InventoryEffectRenderer {
+@Mixin(GuiFurnace.class)
+public abstract class MixinGuiFurnace extends GuiContainer {
 	private static final ResourceLocation INVENTORY_TEXTURE = new ResourceLocation("textures/gui/container/inventory.png");
 	private static final int RECIPE_BOOK_BUTTON_ID = 10;
 	private final SurvivalRecipeBookGui etfu$recipeBook = new SurvivalRecipeBookGui();
 
-
-
-	public MixinGuiInventory(Container container) {
+	public MixinGuiFurnace(Container container) {
 		super(container);
 	}
 
-	@Inject(method = "initGui", at = @At("TAIL"))
-	private void etfu$addRecipeBookPlaceholder(CallbackInfo ci) {
-		if (this.mc.playerController.isInCreativeMode()) return;
+	private net.minecraft.tileentity.TileEntityFurnace etfu$getTileEntity() {
+		try {
+			for (java.lang.reflect.Field f : GuiFurnace.class.getDeclaredFields()) {
+				if (f.getType() == net.minecraft.tileentity.TileEntityFurnace.class) {
+					f.setAccessible(true);
+					return (net.minecraft.tileentity.TileEntityFurnace) f.get(this);
+				}
+			}
+		} catch (Exception ignore) {}
+		return null;
+	}
 
-		this.buttonList.add(new RecipeBookButton(RECIPE_BOOK_BUTTON_ID, this.guiLeft + OffhandLayout.SURVIVAL_RECIPE_BOOK_BUTTON_X, this.guiTop + OffhandLayout.SURVIVAL_RECIPE_BOOK_BUTTON_Y));
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		this.mc.getTextureManager().bindTexture(new ResourceLocation("textures/gui/container/furnace.png"));
+		this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+
+		net.minecraft.tileentity.TileEntityFurnace tile = etfu$getTileEntity();
+		if (tile != null && tile.isBurning()) {
+			int var6 = tile.getBurnTimeRemainingScaled(13);
+			this.drawTexturedModalRect(this.guiLeft + 56, this.guiTop + 36 + 12 - var6, 176, 12 - var6, 14, var6 + 1);
+			var6 = tile.getCookProgressScaled(24);
+			this.drawTexturedModalRect(this.guiLeft + 79, this.guiTop + 34, 176, 14, var6 + 1, 16);
+		}
+	}
+
+	@Override
+	public void initGui() {
+		super.initGui();
+		this.buttonList.add(new RecipeBookButton(RECIPE_BOOK_BUTTON_ID, this.guiLeft + 20, this.guiTop + 35));
 		etfu$updatePositions();
 	}
 
-	@Inject(method = "drawGuiContainerForegroundLayer", at = @At("HEAD"), cancellable = true)
-	private void etfu$drawModernCraftingLabel(int mouseX, int mouseY, CallbackInfo ci) {
-		this.fontRendererObj.drawString(I18n.format("container.crafting"), OffhandLayout.SURVIVAL_TITLE_X, OffhandLayout.SURVIVAL_TITLE_Y, 4210752);
-		ci.cancel();
-	}
-
-	@Inject(method = "drawScreen", at = @At("HEAD"))
-	private void etfu$updatePositionsBeforeDraw(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		etfu$updatePositions();
-	}
-
-	@Inject(method = "drawScreen", at = @At("RETURN"))
-	private void etfu$drawRecipeBook(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		
 		etfu$recipeBook.render(this.mc, this.guiLeft, this.guiTop, mouseX, mouseY, partialTicks);
 		etfu$recipeBook.renderGhost(this.mc, this.guiLeft, this.guiTop);
 		
@@ -58,12 +70,13 @@ public abstract class MixinGuiInventory extends InventoryEffectRenderer {
 		}
 	}
 
-	@Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true)
-	private void etfu$toggleRecipeBook(GuiButton button, CallbackInfo ci) {
+	@Override
+	protected void actionPerformed(GuiButton button) {
 		if (button.id == RECIPE_BOOK_BUTTON_ID) {
 			etfu$recipeBook.toggle();
 			etfu$updatePositions();
-			ci.cancel();
+		} else {
+			super.actionPerformed(button);
 		}
 	}
 
@@ -91,21 +104,13 @@ public abstract class MixinGuiInventory extends InventoryEffectRenderer {
 		} else {
 			this.guiLeft = (this.width - this.xSize) / 2;
 		}
-		
-		// If recipe book is open, disable standard potion effects rendering on the left
-		boolean hasPotionEffects = !isBookOpen && !this.mc.thePlayer.getActivePotionEffects().isEmpty();
-		((InventoryEffectRendererAccessor) this).setHasActivePotionEffects(hasPotionEffects);
-		if (hasPotionEffects) {
-			this.guiLeft = 160 + (this.width - this.xSize - 200) / 2;
-		}
 
-		// Update button positions
 		for (Object obj : this.buttonList) {
 			if (obj instanceof GuiButton) {
 				GuiButton btn = (GuiButton) obj;
 				if (btn.id == RECIPE_BOOK_BUTTON_ID) {
-					btn.xPosition = this.guiLeft + OffhandLayout.SURVIVAL_RECIPE_BOOK_BUTTON_X;
-					btn.yPosition = this.guiTop + OffhandLayout.SURVIVAL_RECIPE_BOOK_BUTTON_Y;
+					btn.xPosition = this.guiLeft + 20;
+					btn.yPosition = this.guiTop + 35;
 				}
 			}
 		}

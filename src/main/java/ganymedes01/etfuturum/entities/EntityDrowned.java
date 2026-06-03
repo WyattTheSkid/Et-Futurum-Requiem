@@ -77,9 +77,15 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 		targetTasks.addTask(3, new net.minecraft.entity.ai.EntityAINearestAttackableTarget(this, net.minecraft.entity.passive.EntityVillager.class, 0, false));
 		targetTasks.addTask(3, new net.minecraft.entity.ai.EntityAINearestAttackableTarget(this, net.minecraft.entity.monster.EntityIronGolem.class, 0, true));
 		// TODO: Target Axolotls when backported
+		// targetTasks.addTask(3, new net.minecraft.entity.ai.EntityAINearestAttackableTarget(this, EntityAxolotl.class, 10, true, false, null));
 		// TODO: Target baby Turtles on land when backported
+		// targetTasks.addTask(3, new net.minecraft.entity.ai.EntityAINearestAttackableTarget(this, EntityTurtle.class, 10, true, false, EntityTurtle.BABY_ON_LAND_SELECTOR));
 
 		tasks.addTask(1, new AIGoToWater(this, 1.0D));
+		// TODO: Avoid Axolotls when backported
+		// tasks.addTask(2, new net.minecraft.entity.ai.EntityAIAvoidEntity(this, EntityAxolotl.class, 6.0F, 1.0D, 1.2D));
+		// TODO: Destroy Turtle Eggs when backported
+		// tasks.addTask(3, new AIDrownedDestroyEgg(Blocks.TURTLE_EGG, this, 1.0D, 16));
 		tasks.addTask(2, new AITridentAttack(this, 1.0D, 40, 10.0F));
 		tasks.addTask(2, new AIDrownedMeleeAttack(this, EntityPlayer.class, 1.0D, false));
 		tasks.addTask(4, new AIDrownedMeleeAttack(this, net.minecraft.entity.passive.EntityVillager.class, 1.0D, true));

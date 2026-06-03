@@ -1852,3 +1852,8 @@ item.etfuturum.raw_magnesium.name=Raw Magnesium
 item.etfuturum.raw_boron.name=Raw Boron
 item.etfuturum.simpleores.raw_adamantium.name=Raw Adamantium
 item.skull.dragon.name=Dragon Head
+
+# Recipe Book
+gui.recipebook.toggleRecipes.all=Showing All
+gui.recipebook.toggleRecipes.craftable=Showing Craftable
+gui.recipebook.search_hint=Search...

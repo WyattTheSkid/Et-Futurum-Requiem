@@ -12,9 +12,93 @@ public class GuiBlastFurnace extends GuiContainer {
 	private static final ResourceLocation furnaceGuiTextures = new ResourceLocation("textures/gui/container/blast_furnace.png");
 	private final TileEntityBlastFurnace tileFurnace;
 
+	private static final ResourceLocation INVENTORY_TEXTURE = new ResourceLocation("textures/gui/container/inventory.png");
+	private static final int RECIPE_BOOK_BUTTON_ID = 10;
+	private final ganymedes01.etfuturum.client.recipebook.SurvivalRecipeBookGui etfu$recipeBook = new ganymedes01.etfuturum.client.recipebook.SurvivalRecipeBookGui();
+
 	public GuiBlastFurnace(InventoryPlayer p_i1091_1_, TileEntityBlastFurnace p_i1091_2_) {
 		super(new ContainerBlastFurnace(p_i1091_1_, p_i1091_2_));
 		this.tileFurnace = p_i1091_2_;
+	}
+
+	@Override
+	public void initGui() {
+		super.initGui();
+		this.buttonList.add(new net.minecraft.client.gui.GuiButton(RECIPE_BOOK_BUTTON_ID, this.guiLeft + 20, this.guiTop + 35, ganymedes01.etfuturum.offhand.OffhandLayout.RECIPE_BOOK_BUTTON_WIDTH, ganymedes01.etfuturum.offhand.OffhandLayout.RECIPE_BOOK_BUTTON_HEIGHT, "") {
+			@Override
+			public void drawButton(net.minecraft.client.Minecraft mc, int mouseX, int mouseY) {
+				if (!this.visible) return;
+				boolean hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+				int textureY = ganymedes01.etfuturum.offhand.OffhandLayout.RECIPE_BOOK_BUTTON_TEXTURE_Y;
+				if (hovered) {
+					textureY += ganymedes01.etfuturum.offhand.OffhandLayout.RECIPE_BOOK_BUTTON_HOVER_Y_OFFSET;
+				}
+				mc.getTextureManager().bindTexture(INVENTORY_TEXTURE);
+				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+				this.drawTexturedModalRect(this.xPosition, this.yPosition, ganymedes01.etfuturum.offhand.OffhandLayout.RECIPE_BOOK_BUTTON_TEXTURE_X, textureY, this.width, this.height);
+			}
+		});
+		etfu$updatePositions();
+	}
+
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		etfu$updatePositions();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		
+		etfu$recipeBook.render(this.mc, this.guiLeft, this.guiTop, mouseX, mouseY, partialTicks);
+		etfu$recipeBook.renderGhost(this.mc, this.guiLeft, this.guiTop);
+		
+		java.util.List<String> tooltip = etfu$recipeBook.getTooltip(this.mc, this.guiLeft, this.guiTop, mouseX, mouseY);
+		if (tooltip != null && !tooltip.isEmpty()) {
+			this.drawHoveringText(tooltip, mouseX, mouseY, this.fontRendererObj);
+		}
+	}
+
+	@Override
+	protected void actionPerformed(net.minecraft.client.gui.GuiButton button) {
+		if (button.id == RECIPE_BOOK_BUTTON_ID) {
+			etfu$recipeBook.toggle();
+			etfu$updatePositions();
+		} else {
+			super.actionPerformed(button);
+		}
+	}
+
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		if (etfu$recipeBook.mouseClicked(this.mc, this.guiLeft, this.guiTop, mouseX, mouseY, mouseButton)) {
+			return;
+		}
+		super.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	protected void keyTyped(char typedChar, int keyCode) {
+		if (etfu$recipeBook.keyTyped(typedChar, keyCode)) {
+			return;
+		}
+		super.keyTyped(typedChar, keyCode);
+	}
+
+	private void etfu$updatePositions() {
+		boolean isBookOpen = etfu$recipeBook.isOpen();
+		boolean isNarrow = this.width < 379;
+		if (isBookOpen && !isNarrow) {
+			this.guiLeft = 177 + (this.width - this.xSize - 200) / 2;
+		} else {
+			this.guiLeft = (this.width - this.xSize) / 2;
+		}
+
+		for (Object obj : this.buttonList) {
+			if (obj instanceof net.minecraft.client.gui.GuiButton) {
+				net.minecraft.client.gui.GuiButton btn = (net.minecraft.client.gui.GuiButton) obj;
+				if (btn.id == RECIPE_BOOK_BUTTON_ID) {
+					btn.xPosition = this.guiLeft + 20;
+					btn.yPosition = this.guiTop + 35;
+				}
+			}
+		}
 	}
 
 	/**
@@ -31,8 +115,8 @@ public class GuiBlastFurnace extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.getTextureManager().bindTexture(furnaceGuiTextures);
-		int k = (this.width - this.xSize) / 2;
-		int l = (this.height - this.ySize) / 2;
+		int k = this.guiLeft;
+		int l = this.guiTop;
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
 
 		if (this.tileFurnace.isBurning()) {

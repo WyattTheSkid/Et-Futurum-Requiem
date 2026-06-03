@@ -319,6 +319,13 @@ public class CommonProxy implements IGuiHandler {
 		EtFuturum.networkWrapper.registerMessage(OffhandNetwork.NoopOffhandSyncHandler.class, OffhandSyncMessage.class, OffhandNetwork.PACKET_SYNC_OFFHAND, Side.CLIENT);
 		EtFuturum.networkWrapper.registerMessage(OffhandNetwork.NoopOffhandTrackingHandler.class, OffhandTrackingMessage.class, OffhandNetwork.PACKET_SYNC_TRACKING, Side.CLIENT);
 		EtFuturum.networkWrapper.registerMessage(OffhandNetwork.NoopOffhandSwingHandler.class, OffhandSwingMessage.class, OffhandNetwork.PACKET_OFFHAND_SWING, Side.CLIENT);
+		class NoopRecipeUnlockSyncHandler implements cpw.mods.fml.common.network.simpleimpl.IMessageHandler<ganymedes01.etfuturum.network.RecipeUnlockSyncMessage, cpw.mods.fml.common.network.simpleimpl.IMessage> {
+			@Override
+			public cpw.mods.fml.common.network.simpleimpl.IMessage onMessage(ganymedes01.etfuturum.network.RecipeUnlockSyncMessage message, cpw.mods.fml.common.network.simpleimpl.MessageContext ctx) {
+				return null;
+			}
+		}
+		EtFuturum.networkWrapper.registerMessage(NoopRecipeUnlockSyncHandler.class, ganymedes01.etfuturum.network.RecipeUnlockSyncMessage.class, 14, Side.CLIENT);
 	}
 
 	public void populateSavedHotbarTab(CreativeTabDisplayBuilder builder) {
