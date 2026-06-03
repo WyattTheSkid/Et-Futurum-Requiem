@@ -1795,12 +1795,27 @@ public class ServerEventHandler {
 		if (entity.getHealth() > Math.round(event.ammount)) {
 			return;
 		}
-		if (entity.getHeldItem() == null || entity.getHeldItem().getItem() != ModItems.TOTEM_OF_UNDYING.get()) {
+
+		boolean mainHand = false;
+		boolean offHand = false;
+
+		ItemStack mainStack = entity.getHeldItem();
+		if (mainStack != null && mainStack.getItem() == ModItems.TOTEM_OF_UNDYING.get()) {
+			mainHand = true;
+		}
+
+		if (!mainHand && entity instanceof EntityPlayer) {
+			ItemStack offStack = ganymedes01.etfuturum.offhand.OffhandInventory.getOffhandStack((EntityPlayer) entity);
+			if (offStack != null && offStack.getItem() == ModItems.TOTEM_OF_UNDYING.get()) {
+				offHand = true;
+			}
+		}
+
+		if (!mainHand && !offHand) {
 			return;
 		}
 
 		if (entity instanceof EntityLiving || entity instanceof EntityPlayer) {
-			//this.spawnTotemParticles(player);
 			entity.worldObj.playSoundEffect(entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, Tags.MC_ASSET_VER + ":item.totem.use", 1.0f, entity.worldObj.rand.nextFloat() * 0.1f + 0.9f);
 
 			entity.clearActivePotions();
@@ -1811,14 +1826,36 @@ public class ServerEventHandler {
 			entity.addPotionEffect(new PotionEffect(Potion.regeneration.id, 900, 1));
 			entity.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 800, 1));
 			entity.addPotionEffect(new PotionEffect(Potion.field_76444_x.id, 100, 1)); // absorption
-			//TODO: Make it respect a stack size
 
-			if (entity instanceof EntityLiving) {
-				entity.setCurrentItemOrArmor(0, null);
+			if (mainHand) {
+				ItemStack stack = entity.getHeldItem();
+				stack.stackSize--;
+				if (stack.stackSize <= 0) {
+					if (entity instanceof EntityPlayer) {
+						((EntityPlayer) entity).inventory.setInventorySlotContents(((EntityPlayer) entity).inventory.currentItem, null);
+					} else {
+						entity.setCurrentItemOrArmor(0, null);
+					}
+				} else {
+					if (entity instanceof EntityPlayer) {
+						((EntityPlayer) entity).inventory.setInventorySlotContents(((EntityPlayer) entity).inventory.currentItem, stack);
+					} else {
+						entity.setCurrentItemOrArmor(0, stack);
+					}
+				}
+			} else if (offHand) {
+				ItemStack stack = ganymedes01.etfuturum.offhand.OffhandInventory.getOffhandStack((EntityPlayer) entity);
+				stack.stackSize--;
+				if (stack.stackSize <= 0) {
+					ganymedes01.etfuturum.offhand.OffhandInventory.setOffhandStack((EntityPlayer) entity, null);
+				} else {
+					ganymedes01.etfuturum.offhand.OffhandInventory.setOffhandStack((EntityPlayer) entity, stack);
+				}
 			}
-			if (entity instanceof EntityPlayer) {
-				((EntityPlayer) entity).addChatMessage(new ChatComponentText(StatCollector.translateToLocal("util.totemBreak")));
-				((EntityPlayer) entity).destroyCurrentEquippedItem();
+
+			if (!entity.worldObj.isRemote) {
+				EtFuturum.networkWrapper.sendToAllAround(new ganymedes01.etfuturum.network.TotemActivationMessage(entity.getEntityId()),
+						new cpw.mods.fml.common.network.NetworkRegistry.TargetPoint(entity.dimension, entity.posX, entity.posY, entity.posZ, 64));
 			}
 		}
 	}

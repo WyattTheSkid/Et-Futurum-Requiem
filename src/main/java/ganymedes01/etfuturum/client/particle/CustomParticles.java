@@ -108,6 +108,11 @@ public class CustomParticles {
 		return spawnParticle(world, particle);
 	}
 
+	public static EntityFX spawnTotemParticle(World world, double x, double y, double z, double mx, double my, double mz) {
+		EntityFX particle = new TotemFX(world, x, y, z, mx, my, mz);
+		return spawnParticle(world, particle);
+	}
+
 	protected static EntityFX spawnParticle(World world, EntityFX entityFX) {
 		if (world.isRemote) {
 			Minecraft.getMinecraft().effectRenderer.addEffect(entityFX);
