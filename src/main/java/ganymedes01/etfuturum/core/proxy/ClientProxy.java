@@ -119,6 +119,15 @@ public class ClientProxy extends CommonProxy {
 		if(ModsList.APPLIED_ENERGISTICS_2.isLoaded()) {
 			MinecraftForgeClient.registerItemRenderer(ModBlocks.DEEPSLATE_CERTUS_QUARTZ_ORE.getItem(), new BlockDeepslateCertusQuartzRenderer());
 		}
+
+		Item netherPortalItem = Item.getItemFromBlock(Blocks.portal);
+		if (netherPortalItem != null) {
+			MinecraftForgeClient.registerItemRenderer(netherPortalItem, new ItemPortalRenderer(false));
+		}
+		Item endPortalItem = Item.getItemFromBlock(Blocks.end_portal);
+		if (endPortalItem != null) {
+			MinecraftForgeClient.registerItemRenderer(endPortalItem, new ItemPortalRenderer(true));
+		}
 	}
 
 	private void registerBlockRenderers() {

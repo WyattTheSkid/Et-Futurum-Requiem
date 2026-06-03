@@ -76,6 +76,27 @@ public class DrownedRenderer extends RenderBiped {
 	}
 
 	@Override
+	public void doRender(EntityLiving entity, double x, double y, double z, float yaw, float partialTicks) {
+		boolean hasNautilus = false;
+		if (entity instanceof EntityDrowned) {
+			EntityDrowned drowned = (EntityDrowned) entity;
+			hasNautilus = drowned.hasNautilusShell() && ModItems.NAUTILUS_SHELL.isEnabled();
+		}
+		
+		int leftPose = hasNautilus ? 1 : 0;
+		this.drownedModel.heldItemLeft = leftPose;
+		this.outerModel.heldItemLeft = leftPose;
+		if (this.field_82423_g != null) {
+			this.field_82423_g.heldItemLeft = leftPose;
+		}
+		if (this.field_82425_h != null) {
+			this.field_82425_h.heldItemLeft = leftPose;
+		}
+
+		super.doRender(entity, x, y, z, yaw, partialTicks);
+	}
+
+	@Override
 	protected void renderEquippedItems(EntityLiving entity, float partialTicks) {
 		ItemStack stack = entity.getHeldItem();
 		boolean hasTrident = stack != null && ModItems.TRIDENT.isEnabled() && stack.getItem() == ModItems.TRIDENT.get();
@@ -112,6 +133,42 @@ public class DrownedRenderer extends RenderBiped {
 			entity.setCurrentItemOrArmor(0, stack);
 		} else {
 			super.renderEquippedItems(entity, partialTicks);
+		}
+
+		if (entity instanceof EntityDrowned) {
+			EntityDrowned drowned = (EntityDrowned) entity;
+			if (drowned.hasNautilusShell() && ModItems.NAUTILUS_SHELL.isEnabled()) {
+				ItemStack shellStack = ModItems.NAUTILUS_SHELL.newItemStack();
+				
+				GL11.glPushMatrix();
+				int previousFrontFace = GL11.glGetInteger(GL11.GL_FRONT_FACE);
+				try {
+					this.drownedModel.bipedLeftArm.postRender(0.0625F);
+					GL11.glTranslatef(-this.drownedModel.bipedLeftArm.rotationPointX * 0.0625F, -this.drownedModel.bipedLeftArm.rotationPointY * 0.0625F, -this.drownedModel.bipedLeftArm.rotationPointZ * 0.0625F);
+					GL11.glScalef(-1.0F, 1.0F, 1.0F);
+					GL11.glTranslatef(-this.drownedModel.bipedLeftArm.rotationPointX * 0.0625F, this.drownedModel.bipedLeftArm.rotationPointY * 0.0625F, -this.drownedModel.bipedLeftArm.rotationPointZ * 0.0625F);
+					GL11.glTranslatef(-0.0625F, 0.4375F, 0.0625F);
+					GL11.glFrontFace(GL11.GL_CW);
+
+					float scale = 0.375F;
+					GL11.glTranslatef(0.25F, 0.1875F, -0.1875F);
+					GL11.glScalef(scale, scale, scale);
+					GL11.glRotatef(60.0F, 0.0F, 0.0F, 1.0F);
+					GL11.glRotatef(-90.0F, 1.0F, 0.0F, 0.0F);
+					GL11.glRotatef(20.0F, 0.0F, 0.0F, 1.0F);
+
+					net.minecraft.client.renderer.ItemRenderer itemRenderer = net.minecraft.client.renderer.entity.RenderManager.instance.itemRenderer;
+					int color = shellStack.getItem().getColorFromItemStack(shellStack, 0);
+					float red = (color >> 16 & 255) / 255.0F;
+					float green = (color >> 8 & 255) / 255.0F;
+					float blue = (color & 255) / 255.0F;
+					GL11.glColor4f(red, green, blue, 1.0F);
+					itemRenderer.renderItem(drowned, shellStack, 0);
+				} finally {
+					GL11.glFrontFace(previousFrontFace);
+					GL11.glPopMatrix();
+				}
+			}
 		}
 	}
 

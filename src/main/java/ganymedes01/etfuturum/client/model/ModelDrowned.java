@@ -80,6 +80,13 @@ public class ModelDrowned extends ModelZombie {
 			bipedRightArm.rotateAngleY = 0.0F;
 			bipedLeftArm.rotateAngleY = 0.0F;
 
+			if (this.heldItemRight != 0) {
+				this.bipedRightArm.rotateAngleX = this.bipedRightArm.rotateAngleX * 0.5F - ((float)Math.PI / 5F) * (float)this.heldItemRight;
+			}
+			if (this.heldItemLeft != 0) {
+				this.bipedLeftArm.rotateAngleX = this.bipedLeftArm.rotateAngleX * 0.5F - ((float)Math.PI / 5F) * (float)this.heldItemLeft;
+			}
+
 			// Standard idle/walking arm bobbing from ModelBiped
 			// Source: 1.21.4 AnimationUtils.bobArms() / 1.13.2 ModelBiped lines 237-240
 			bipedRightArm.rotateAngleZ += MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;

@@ -131,6 +131,12 @@ public enum ModItems {
 				GameRegistry.registerItem(item.get(), item.name().toLowerCase());
 			}
 		}
+		if (Item.getItemFromBlock(Blocks.portal) == null) {
+			GameRegistry.registerItem(new net.minecraft.item.ItemBlock(Blocks.portal), "portal");
+		}
+		if (Item.getItemFromBlock(Blocks.end_portal) == null) {
+			GameRegistry.registerItem(new net.minecraft.item.ItemBlock(Blocks.end_portal), "end_portal");
+		}
 	}
 
 	final private boolean isEnabled;

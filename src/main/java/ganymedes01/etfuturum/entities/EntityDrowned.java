@@ -2,13 +2,17 @@ package ganymedes01.etfuturum.entities;
 
 import ganymedes01.etfuturum.ModItems;
 import ganymedes01.etfuturum.Tags;
+import ganymedes01.etfuturum.entities.ai.FlyingPathNavigator;
+import ganymedes01.etfuturum.entities.ai.ExtendedEntityMoveHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIArrowAttack;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.monster.EntityZombie;
@@ -16,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -48,6 +53,9 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 	// Mirrors 1.21.4 Drowned.searchingForLand - true when swimming up to surface
 	private boolean searchingForLand;
 
+	private PathNavigate waterNavigation;
+	private PathNavigate groundNavigation;
+
 	public EntityDrowned(World world) {
 		super(world);
 		stepHeight = 1.0F;
@@ -68,6 +76,8 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 		targetTasks.addTask(2, new AITargetPlayer(this, EntityPlayer.class, 0, true));
 		targetTasks.addTask(3, new net.minecraft.entity.ai.EntityAINearestAttackableTarget(this, net.minecraft.entity.passive.EntityVillager.class, 0, false));
 		targetTasks.addTask(3, new net.minecraft.entity.ai.EntityAINearestAttackableTarget(this, net.minecraft.entity.monster.EntityIronGolem.class, 0, true));
+		// TODO: Target Axolotls when backported
+		// TODO: Target baby Turtles on land when backported
 
 		tasks.addTask(1, new AIGoToWater(this, 1.0D));
 		tasks.addTask(2, new AITridentAttack(this, 1.0D, 40, 10.0F));
@@ -75,6 +85,21 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 		tasks.addTask(4, new AIDrownedMeleeAttack(this, net.minecraft.entity.passive.EntityVillager.class, 1.0D, true));
 		tasks.addTask(5, new AIGoToBeach(this, 1.0D));
 		tasks.addTask(6, new AISwimUp(this, 1.0D, SEA_LEVEL));
+
+		this.moveHelper = new DrownedMoveHelper(this);
+		this.waterNavigation = new DrownedWaterPathNavigator(this, worldObj);
+		this.waterNavigation.setCanSwim(true);
+		this.waterNavigation.setAvoidsWater(false);
+		this.groundNavigation = this.navigator;
+		this.groundNavigation.setAvoidsWater(false);
+	}
+
+	public boolean hasNautilusShell() {
+		return hasNautilusShell;
+	}
+
+	public void setHasNautilusShell(boolean hasNautilusShell) {
+		this.hasNautilusShell = hasNautilusShell;
 	}
 
 	/**
@@ -177,6 +202,12 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 		int x = MathHelper.floor_double(posX);
 		int z = MathHelper.floor_double(posZ);
 		BiomeGenBase biome = worldObj.getBiomeGenForCoords(x, z);
+
+		boolean flag = isValidLightLevel() && worldObj.checkNoEntityCollision(boundingBox);
+		if (!flag) {
+			return false;
+		}
+
 		if (hasBiomeType(biome, Type.RIVER)) {
 			if (rand.nextInt(15) != 0) {
 				return false;
@@ -185,7 +216,7 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 			return false;
 		}
 
-		return worldObj.checkNoEntityCollision(boundingBox);
+		return true;
 	}
 
 	@Override
@@ -203,10 +234,13 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 			setSwimming(isInWater() && wantsToSwim());
 			setAggressive(getAttackTarget() != null);
 
-			EntityLivingBase target = getAttackTarget();
-			if (target != null && isInWater() && (target.isInWater() || !worldObj.isDaytime())) {
-				swimToward(target.posX, target.boundingBox.minY + (double) target.height * 0.3333333333333333D, target.posZ, 0.01D);
+			if (isSwimming()) {
+				this.navigator = this.waterNavigation;
+			} else {
+				this.navigator = this.groundNavigation;
 			}
+
+			EntityLivingBase target = getAttackTarget();
 
 			if (DEBUG_DROWNED_AI && ticksExisted % 40 == 0) {
 				double dist = target != null ? getDistanceToEntity(target) : -1.0D;
@@ -254,6 +288,39 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 	}
 
 	@Override
+	public boolean handleWaterMovement() {
+		if (isSwimming()) {
+			double oldMotionX = motionX;
+			double oldMotionY = motionY;
+			double oldMotionZ = motionZ;
+			boolean inWater = super.handleWaterMovement();
+			motionX = oldMotionX;
+			motionY = oldMotionY;
+			motionZ = oldMotionZ;
+			return inWater;
+		}
+		return super.handleWaterMovement();
+	}
+
+	@Override
+	public float getBlockPathWeight(int x, int y, int z) {
+		return worldObj.getBlock(x, y, z).getMaterial() == Material.water ? 10.0F : super.getBlockPathWeight(x, y, z);
+	}
+
+	@Override
+	public void moveEntityWithHeading(float strafe, float forward) {
+		if (this.isAIEnabled() && this.isInWater() && this.wantsToSwim()) {
+			this.moveFlying(strafe, forward, 0.01F);
+			this.moveEntity(this.motionX, this.motionY, this.motionZ);
+			this.motionX *= 0.9D;
+			this.motionY *= 0.9D;
+			this.motionZ *= 0.9D;
+		} else {
+			super.moveEntityWithHeading(strafe, forward);
+		}
+	}
+
+	@Override
 	public boolean attackEntityAsMob(Entity entity) {
 		return !isHoldingTrident() && super.attackEntityAsMob(entity);
 	}
@@ -279,10 +346,7 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 
 	public boolean shouldAttack(EntityLivingBase target) {
 		if (target == null) {
-			return true;
-		}
-		if (target == getAITarget()) {
-			return true;
+			return false;
 		}
 		return !(target instanceof EntityPlayer) || !worldObj.isDaytime() || target.isInWater();
 	}
@@ -405,7 +469,7 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 
 		@Override
 		public boolean continueExecuting() {
-			return shouldExecute() || !drowned.getNavigator().noPath();
+			return shouldExecute() || (attackTarget != null && !drowned.getNavigator().noPath() && drowned.isHoldingTrident() && drowned.shouldAttack(attackTarget));
 		}
 
 		@Override
@@ -529,12 +593,12 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 
 		@Override
 		public boolean shouldExecute() {
-			return !drowned.isHoldingTrident() && super.shouldExecute();
+			return !drowned.isHoldingTrident() && drowned.shouldAttack(drowned.getAttackTarget()) && super.shouldExecute();
 		}
 
 		@Override
 		public boolean continueExecuting() {
-			return !drowned.isHoldingTrident() && super.continueExecuting();
+			return !drowned.isHoldingTrident() && drowned.shouldAttack(drowned.getAttackTarget()) && super.continueExecuting();
 		}
 	}
 
@@ -628,7 +692,11 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 
 		@Override
 		public boolean continueExecuting() {
-			return shouldExecute() && !obstructed;
+			return shouldExecute() && !obtested();
+		}
+
+		private boolean obtested() {
+			return obstructed;
 		}
 
 		@Override
@@ -668,6 +736,68 @@ public class EntityDrowned extends EntityZombie implements IRangedAttackMob {
 				}
 			}
 			return false;
+		}
+	}
+
+	private static class DrownedWaterPathNavigator extends FlyingPathNavigator {
+		public DrownedWaterPathNavigator(EntityLiving entity, World world) {
+			super(entity, world);
+		}
+
+		@Override
+		protected boolean canNavigate() {
+			return this.theEntity.isInWater();
+		}
+
+		@Override
+		public boolean isSafeToStandAt(int x, int y, int z, int sizeX, int sizeY, int sizeZ, Vec3 pos, double motionX, double motionZ) {
+			return this.isPositionClear(x, y, z, sizeX, sizeY, sizeZ, pos, motionX, motionZ);
+		}
+	}
+
+	private static class DrownedMoveHelper extends ExtendedEntityMoveHelper {
+		private final EntityDrowned drowned;
+
+		public DrownedMoveHelper(EntityDrowned drowned) {
+			super(drowned);
+			this.drowned = drowned;
+		}
+
+		@Override
+		public void onUpdateMoveHelper() {
+			EntityLivingBase target = drowned.getAttackTarget();
+			if (drowned.wantsToSwim() && drowned.isInWater()) {
+				if (target != null && target.posY > drowned.posY || drowned.searchingForLand) {
+					drowned.motionY += 0.002D;
+				}
+
+				if (this.action != ExtendedEntityMoveHelper.Action.MOVE_TO || drowned.getNavigator().noPath()) {
+					drowned.setAIMoveSpeed(0.0F);
+					this.action = ExtendedEntityMoveHelper.Action.WAIT;
+					return;
+				}
+
+				double d0 = this.posX - drowned.posX;
+				double d1 = this.posY - drowned.posY;
+				double d2 = this.posZ - drowned.posZ;
+				double d3 = MathHelper.sqrt_double(d0 * d0 + d1 * d1 + d2 * d2);
+				d1 /= d3;
+				float f = (float) (Math.atan2(d2, d0) * 180.0D / Math.PI) - 90.0F;
+				drowned.rotationYaw = this.limitAngle(drowned.rotationYaw, f, 90.0F);
+				drowned.renderYawOffset = drowned.rotationYaw;
+				float f1 = (float) (this.speed * drowned.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
+				float f2 = drowned.getAIMoveSpeed() + 0.125F * (f1 - drowned.getAIMoveSpeed());
+				drowned.setAIMoveSpeed(f2);
+				drowned.motionX += (double) f2 * d0 * 0.005D;
+				drowned.motionY += (double) f2 * d1 * 0.1D;
+				drowned.motionZ += (double) f2 * d2 * 0.005D;
+				this.action = ExtendedEntityMoveHelper.Action.WAIT;
+			} else {
+				if (!drowned.onGround) {
+					drowned.motionY -= 0.008D;
+				}
+				super.onUpdateMoveHelper();
+			}
 		}
 	}
 }
