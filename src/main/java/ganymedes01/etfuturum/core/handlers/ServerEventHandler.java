@@ -1816,8 +1816,6 @@ public class ServerEventHandler {
 		}
 
 		if (entity instanceof EntityLiving || entity instanceof EntityPlayer) {
-			entity.worldObj.playSoundEffect(entity.posX + 0.5, entity.posY + 0.5, entity.posZ + 0.5, Tags.MC_ASSET_VER + ":item.totem.use", 1.0f, entity.worldObj.rand.nextFloat() * 0.1f + 0.9f);
-
 			entity.clearActivePotions();
 			float healpercent = (float) ConfigFunctions.totemHealPercent / 100;
 			float sethp = entity.getMaxHealth() * healpercent;

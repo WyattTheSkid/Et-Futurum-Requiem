@@ -2,6 +2,7 @@ package ganymedes01.etfuturum.client.particle;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import roadhog360.hogutils.api.utils.FastRandom;
@@ -110,6 +111,11 @@ public class CustomParticles {
 
 	public static EntityFX spawnTotemParticle(World world, double x, double y, double z, double mx, double my, double mz) {
 		EntityFX particle = new TotemFX(world, x, y, z, mx, my, mz);
+		return spawnParticle(world, particle);
+	}
+
+	public static EntityFX spawnTotemParticleEmitter(World world, Entity entity, int lifetime) {
+		EntityFX particle = new TotemParticleEmitter(world, entity, lifetime);
 		return spawnParticle(world, particle);
 	}
 

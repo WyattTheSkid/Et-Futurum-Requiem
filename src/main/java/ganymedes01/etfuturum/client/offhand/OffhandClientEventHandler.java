@@ -9,16 +9,23 @@ import ganymedes01.etfuturum.network.OffhandSwapMessage;
 import ganymedes01.etfuturum.offhand.OffhandInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
+import java.util.Random;
 
 public final class OffhandClientEventHandler {
 	public static final OffhandClientEventHandler INSTANCE = new OffhandClientEventHandler();
@@ -27,6 +34,7 @@ public final class OffhandClientEventHandler {
 	private static int itemActivationTicks;
 	private static float itemActivationOffX;
 	private static float itemActivationOffY;
+	private static final Random ITEM_ACTIVATION_RANDOM = new Random();
 
 	private static final ResourceLocation WIDGETS_TEXTURE = new ResourceLocation("textures/gui/widgets.png");
 	private boolean hadWorld;
@@ -130,20 +138,15 @@ public final class OffhandClientEventHandler {
 	}
 
 	public static void displayItemActivation(ItemStack stack) {
-		System.out.println("[TotemDebug] displayItemActivation called with " + stack);
 		itemActivationItem = stack;
 		itemActivationTicks = 40;
-		Minecraft mc = Minecraft.getMinecraft();
-		if (mc.theWorld != null) {
-			java.util.Random rand = mc.theWorld.rand;
-			itemActivationOffX = rand.nextFloat() * 2.0F - 1.0F;
-			itemActivationOffY = rand.nextFloat() * 2.0F - 1.0F;
-		}
+		itemActivationOffX = ITEM_ACTIVATION_RANDOM.nextFloat() * 2.0F - 1.0F;
+		itemActivationOffY = ITEM_ACTIVATION_RANDOM.nextFloat() * 2.0F - 1.0F;
 	}
 
 	@SubscribeEvent
-	public void onRenderTotem(RenderGameOverlayEvent.Post event) {
-		if (event.type != RenderGameOverlayEvent.ElementType.HOTBAR) return;
+	public void onRenderTotem(RenderGameOverlayEvent.Pre event) {
+		if (event.type != RenderGameOverlayEvent.ElementType.HELMET) return;
 		if (itemActivationItem == null || itemActivationTicks <= 0) return;
 
 		Minecraft mc = Minecraft.getMinecraft();
@@ -164,7 +167,7 @@ public final class OffhandClientEventHandler {
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glPushMatrix();
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		RenderHelper.enableStandardItemLighting();
 		GL11.glTranslatef((float)(width / 2) + f5 * MathHelper.abs(MathHelper.sin(f4 * 2.0F)), (float)(height / 2) + f6 * MathHelper.abs(MathHelper.sin(f4 * 2.0F)), -50.0F);
@@ -173,10 +176,42 @@ public final class OffhandClientEventHandler {
 		GL11.glRotatef(900.0F * MathHelper.abs(MathHelper.sin(f4)), 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(6.0F * MathHelper.cos(f * 8.0F), 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(6.0F * MathHelper.cos(f * 8.0F), 0.0F, 0.0F, 1.0F);
-		net.minecraft.client.renderer.entity.RenderManager.instance.itemRenderer.renderItem(mc.thePlayer, itemActivationItem, 0);
+		renderFixedActivationItem(mc, itemActivationItem);
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 		RenderHelper.disableStandardItemLighting();
 		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+	}
+
+	private static void renderFixedActivationItem(Minecraft mc, ItemStack stack) {
+		if (mc.thePlayer == null || stack == null || stack.getItem() == null) return;
+
+		TextureManager textureManager = mc.getTextureManager();
+		Item item = stack.getItem();
+		int passes = item.getRenderPasses(stack.getItemDamage());
+		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+
+		for (int pass = 0; pass < passes; ++pass) {
+			IIcon icon = mc.thePlayer.getItemIcon(stack, pass);
+			if (icon == null) continue;
+
+			int color = item.getColorFromItemStack(stack, pass);
+			float red = (float) (color >> 16 & 255) / 255.0F;
+			float green = (float) (color >> 8 & 255) / 255.0F;
+			float blue = (float) (color & 255) / 255.0F;
+			GL11.glColor4f(red, green, blue, 1.0F);
+			textureManager.bindTexture(textureManager.getResourceLocation(stack.getItemSpriteNumber()));
+			TextureUtil.func_152777_a(false, false, 1.0F);
+
+			GL11.glPushMatrix();
+			GL11.glTranslatef(-0.5F, -0.5F, 0.03125F);
+			ItemRenderer.renderItemIn2D(Tessellator.instance, icon.getMaxU(), icon.getMinV(), icon.getMinU(), icon.getMaxV(), icon.getIconWidth(), icon.getIconHeight(), 0.0625F);
+			GL11.glPopMatrix();
+		}
+
+		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+		TextureUtil.func_147945_b();
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 }
