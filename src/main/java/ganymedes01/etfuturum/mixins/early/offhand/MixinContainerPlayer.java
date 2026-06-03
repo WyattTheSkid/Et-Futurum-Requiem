@@ -19,7 +19,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinContainerPlayer extends Container {
 	@Inject(method = "<init>", at = @At("RETURN"))
 	private void etfu$addOffhandSlot(InventoryPlayer inventory, boolean localWorld, EntityPlayer player, CallbackInfo ci) {
+		positionSlot(0, OffhandLayout.SURVIVAL_CRAFT_RESULT_X, OffhandLayout.SURVIVAL_CRAFT_RESULT_Y);
+		for (int row = 0; row < 2; ++row) {
+			for (int column = 0; column < 2; ++column) {
+				positionSlot(1 + column + row * 2, OffhandLayout.SURVIVAL_CRAFTING_GRID_X + column * 18, OffhandLayout.SURVIVAL_CRAFTING_GRID_Y + row * 18);
+			}
+		}
+
 		this.addSlotToContainer(new Slot(player.inventory, OffhandInventory.OFFHAND_INVENTORY_INDEX, OffhandLayout.SURVIVAL_OFFHAND_X, OffhandLayout.SURVIVAL_OFFHAND_Y));
+	}
+
+	private void positionSlot(int index, int x, int y) {
+		if (this.inventorySlots.size() > index) {
+			Slot slot = (Slot) this.inventorySlots.get(index);
+			slot.xDisplayPosition = x;
+			slot.yDisplayPosition = y;
+		}
 	}
 
 	@Inject(method = "transferStackInSlot", at = @At("HEAD"), cancellable = true)
