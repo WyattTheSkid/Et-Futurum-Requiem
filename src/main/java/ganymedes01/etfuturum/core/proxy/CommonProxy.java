@@ -12,6 +12,7 @@ import ganymedes01.etfuturum.ModItems;
 import ganymedes01.etfuturum.client.gui.inventory.*;
 import ganymedes01.etfuturum.compat.ModsList;
 import ganymedes01.etfuturum.configuration.configs.*;
+import ganymedes01.etfuturum.core.handlers.creativetabs.CreativeTabDisplayBuilder;
 import ganymedes01.etfuturum.core.handlers.EntityEventHandler;
 import ganymedes01.etfuturum.core.handlers.SculkEventHandler;
 import ganymedes01.etfuturum.core.handlers.ServerEventHandler;
@@ -318,5 +319,8 @@ public class CommonProxy implements IGuiHandler {
 		EtFuturum.networkWrapper.registerMessage(OffhandNetwork.NoopOffhandSyncHandler.class, OffhandSyncMessage.class, OffhandNetwork.PACKET_SYNC_OFFHAND, Side.CLIENT);
 		EtFuturum.networkWrapper.registerMessage(OffhandNetwork.NoopOffhandTrackingHandler.class, OffhandTrackingMessage.class, OffhandNetwork.PACKET_SYNC_TRACKING, Side.CLIENT);
 		EtFuturum.networkWrapper.registerMessage(OffhandNetwork.NoopOffhandSwingHandler.class, OffhandSwingMessage.class, OffhandNetwork.PACKET_OFFHAND_SWING, Side.CLIENT);
+	}
+
+	public void populateSavedHotbarTab(CreativeTabDisplayBuilder builder) {
 	}
 }

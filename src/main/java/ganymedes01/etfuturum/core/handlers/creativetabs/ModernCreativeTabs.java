@@ -1,5 +1,6 @@
 package ganymedes01.etfuturum.core.handlers.creativetabs;
 
+import ganymedes01.etfuturum.EtFuturum;
 import ganymedes01.etfuturum.ModBlocks;
 import ganymedes01.etfuturum.ModItems;
 import ganymedes01.etfuturum.configuration.configs.ConfigBlocksItems;
@@ -1767,11 +1768,12 @@ public class ModernCreativeTabs {
 }
     });
 
-    public static final CreativeTabs HOTBAR = new ModernCreativeTab("hotbar", () -> new ItemStack(Blocks.bookshelf), new CreativeTabPopulator() {
-        @Override
-        public void populate(CreativeTabDisplayBuilder p) {
-        }
-    });
+	public static final CreativeTabs HOTBAR = new ModernCreativeTab("hotbar", () -> new ItemStack(Blocks.bookshelf), new CreativeTabPopulator() {
+		@Override
+		public void populate(CreativeTabDisplayBuilder p) {
+			EtFuturum.proxy.populateSavedHotbarTab(p);
+		}
+	}, true);
 
     public static final CreativeTabs TOOLS = new ModernCreativeTab("tools", () -> new ItemStack(Items.diamond_pickaxe), new CreativeTabPopulator() {
         @Override

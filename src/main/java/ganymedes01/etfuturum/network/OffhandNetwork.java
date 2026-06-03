@@ -18,6 +18,7 @@ public final class OffhandNetwork {
 	public static final int PACKET_OFFHAND_USE = 10;
 	public static final int PACKET_SYNC_TRACKING = 11;
 	public static final int PACKET_OFFHAND_SWING = 12;
+	public static final int PACKET_PLACE_RECIPE = 13;
 
 	private OffhandNetwork() {
 	}
@@ -26,6 +27,7 @@ public final class OffhandNetwork {
 		EtFuturum.networkWrapper.registerMessage(OffhandSwapMessage.Handler.class, OffhandSwapMessage.class, PACKET_SWAP_HANDS, Side.SERVER);
 		EtFuturum.proxy.registerOffhandClientPacketHandlers();
 		EtFuturum.networkWrapper.registerMessage(OffhandUseMessage.Handler.class, OffhandUseMessage.class, PACKET_OFFHAND_USE, Side.SERVER);
+		EtFuturum.networkWrapper.registerMessage(RecipePlaceMessage.Handler.class, RecipePlaceMessage.class, PACKET_PLACE_RECIPE, Side.SERVER);
 	}
 
 	public static void syncOffhandToPlayer(EntityPlayerMP player) {

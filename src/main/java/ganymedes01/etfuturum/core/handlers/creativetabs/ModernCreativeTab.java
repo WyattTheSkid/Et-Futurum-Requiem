@@ -7,15 +7,21 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class ModernCreativeTab extends CreativeTabs {
-    private final Supplier<ItemStack> iconSupplier;
-    private ItemStack iconStack;
-    private final CreativeTabPopulator populator;
+	private final Supplier<ItemStack> iconSupplier;
+	private ItemStack iconStack;
+	private final CreativeTabPopulator populator;
+	private final boolean allowEmptyEntries;
 
-    public ModernCreativeTab(String label, Supplier<ItemStack> iconSupplier, CreativeTabPopulator populator) {
-        super(label);
-        this.iconSupplier = iconSupplier;
-        this.populator = populator;
-    }
+	public ModernCreativeTab(String label, Supplier<ItemStack> iconSupplier, CreativeTabPopulator populator) {
+		this(label, iconSupplier, populator, false);
+	}
+
+	public ModernCreativeTab(String label, Supplier<ItemStack> iconSupplier, CreativeTabPopulator populator, boolean allowEmptyEntries) {
+		super(label);
+		this.iconSupplier = iconSupplier;
+		this.populator = populator;
+		this.allowEmptyEntries = allowEmptyEntries;
+	}
     public int getTabPage() {
         return 0;
     }
@@ -41,10 +47,14 @@ public class ModernCreativeTab extends CreativeTabs {
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void displayAllReleventItems(final List list) {
-        populator.populate(new CreativeTabDisplayBuilder() {
-            @Override
-            public void accept(ItemStack stack) {
-                if (stack != null && stack.getItem() != null) {
+		populator.populate(new CreativeTabDisplayBuilder() {
+			@Override
+			public void accept(ItemStack stack) {
+				if (allowEmptyEntries && stack == null) {
+					list.add(null);
+					return;
+				}
+				if (stack != null && stack.getItem() != null) {
                     if (Item.itemRegistry.getNameForObject(stack.getItem()) != null) {
                         list.add(stack);
                     }

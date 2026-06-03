@@ -39,6 +39,11 @@ potion.levitation.postfix=Potion of Levitation
 debug.gamemodes.select_next=%s Next
 debug.gamemodes.press_f4=[ F4 ]
 key.etfuturum.offhand.swap=Swap Item With Offhand
+key.saveToolbarActivator=Save Toolbar Activator
+key.loadToolbarActivator=Load Toolbar Activator
+key.categories.creative=Creative Mode
+inventory.hotbarSaved=Item toolbar saved (restore with %1$s+%2$s)
+inventory.hotbarInfo=Save toolbar with %1$s+%2$s
 
 # Gamemodes
 gameMode.Spectator=Spectator Mode
