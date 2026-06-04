@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraft.potion.Potion;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -77,9 +78,19 @@ public abstract class MixinEntityPlayer implements IOffhandEntity {
 		etfu$activeHand = Hand.MAIN_HAND;
 	}
 
-	@Inject(method = "stopUsingItem", at = @At("TAIL"))
+	@Inject(method = "stopUsingItem", at = @At("HEAD"), cancellable = true)
 	private void etfu$stopOffhandUsingItem(CallbackInfo ci) {
-		etfu$activeHand = Hand.MAIN_HAND;
+		if (etfu$activeHand != Hand.OFF_HAND) return;
+
+		EntityPlayer self = (EntityPlayer) (Object) this;
+		if (itemInUse != null) {
+			if (!ForgeEventFactory.onUseItemStop(self, itemInUse, self.getItemInUseCount())) {
+				itemInUse.onPlayerStoppedUsing(self.worldObj, self, self.getItemInUseCount());
+			}
+			OffhandInventory.setOffhandStack(self, itemInUse);
+		}
+		self.clearItemInUse();
+		ci.cancel();
 	}
 
 	@Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/InventoryPlayer;getCurrentItem()Lnet/minecraft/item/ItemStack;"))

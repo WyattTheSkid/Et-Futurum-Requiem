@@ -10,7 +10,9 @@ import ganymedes01.etfuturum.core.utils.Logger;
 import ganymedes01.etfuturum.network.OffhandNetwork;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemMapBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.Packet;
 
 public final class OffhandEventHandler {
 	public static final OffhandEventHandler INSTANCE = new OffhandEventHandler();
@@ -48,6 +50,8 @@ public final class OffhandEventHandler {
 	public void onPlayerTick(TickEvent.PlayerTickEvent event) {
 		if (event.phase != TickEvent.Phase.END || event.player.worldObj.isRemote || !(event.player instanceof EntityPlayerMP player)) return;
 
+		updateOffhandMap(player);
+
 		int currentHash = getStackSyncHash(OffhandInventory.getOffhandStack(player));
 		int lastHash = player.getEntityData().getInteger(LAST_SYNC_HASH_KEY);
 		if (currentHash != lastHash) {
@@ -57,6 +61,17 @@ public final class OffhandEventHandler {
 
 		if (player.ticksExisted % 100 == 0) {
 			OffhandNetwork.syncVisibleOffhandsToPlayer(player);
+		}
+	}
+
+	private static void updateOffhandMap(EntityPlayerMP player) {
+		ItemStack stack = OffhandInventory.getOffhandStack(player);
+		if (stack == null || stack.getItem() == null || !stack.getItem().isMap()) return;
+
+		stack.updateAnimation(player.worldObj, player, OffhandInventory.OFFHAND_INVENTORY_INDEX, true);
+		Packet packet = ((ItemMapBase) stack.getItem()).func_150911_c(stack, player.worldObj, player);
+		if (packet != null) {
+			player.playerNetServerHandler.sendPacket(packet);
 		}
 	}
 

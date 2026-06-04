@@ -90,7 +90,11 @@ public class OffhandUseMessage implements IMessage {
 		@Override
 		public IMessage onMessage(OffhandUseMessage message, MessageContext ctx) {
 			EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-			if (player == null || player.isDead || player.isUsingItem()) return null;
+			if (player == null || player.isDead) return null;
+			if (player.isUsingItem()) {
+				if (player instanceof IOffhandEntity && ((IOffhandEntity) player).etfu$getActiveHand() == Hand.OFF_HAND) return null;
+				player.clearItemInUse();
+			}
 			if (OffhandInventory.getOffhandStack(player) == null) return null;
 
 			WorldServer world = player.mcServer.worldServerForDimension(player.dimension);
